@@ -103,7 +103,7 @@ function renderHeader(active) {
       '<a href="index.html#about">About Saxon</a>' +
       '<a href="mailto:' + CONFIG.contactEmail + '">Contact</a>' +
     '</nav>' +
-    '<div class="kid-badge"><span class="dot"></span> Supporting a Young Collector</div>' +
+    '<div class="kid-badge"><span class="dot"></span> Support a Young Collector</div>' +
     '<div class="header-icons">' +
       '<a class="icon-btn" href="admin.html" title="Card manager" aria-label="Card manager">&#9881;</a>' +
       '<a class="icon-btn" href="cart.html" title="Cart" aria-label="Cart">&#128722;' + badge + '</a>' +
@@ -149,7 +149,7 @@ function renderFooter() {
     '</div>' +
   '</div>' +
   '<div class="footer-bottom">Mr. PokeCards &middot; built by Saxon &middot; ' +
-    '<span class="dot"></span> Supporting a Young Collector</div>';
+    '<span class="dot"></span> Support a Young Collector</div>';
 }
 
 function updateCartBadge() {
