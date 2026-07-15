@@ -1,0 +1,4 @@
+# Mr. PokeCards — static site, no build step. All files live at the repo root.
+[build]
+  publish = "."
+  command = ""
