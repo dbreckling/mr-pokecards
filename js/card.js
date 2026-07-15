@@ -2,18 +2,35 @@
 //  Product detail page.
 // ============================================================
 
+let GALLERY = [];
+
 function mediaHtml(card) {
-  const main = card.image
-    ? '<img src="' + card.image + '" alt="' + escapeHtml(card.name) + '">'
-    : '<div class="cardback"><div class="emblem" style="width:96px;height:96px;font-size:44px">&#9733;</div>' +
-      '<div class="nm" style="font-size:20px">' + escapeHtml(card.name) + '</div></div>';
-  const thumb = card.image
-    ? '<div class="pdp-thumb active"><img src="' + card.image + '" alt=""></div>'
-    : '<div class="pdp-thumb active">&#9733;</div>';
+  GALLERY = [];
+  if (card.image) GALLERY.push(card.image);
+  (card.images || []).forEach(i => { if (i) GALLERY.push(i); });
+
+  if (!GALLERY.length) {
+    return '<div class="pdp-media">' +
+      '<div class="pdp-thumbs"><div class="pdp-thumb active">&#9733;</div></div>' +
+      '<div class="pdp-main"><div class="cardback"><div class="emblem" style="width:96px;height:96px;font-size:44px">&#9733;</div>' +
+      '<div class="nm" style="font-size:20px">' + escapeHtml(card.name) + '</div></div></div>' +
+    '</div>';
+  }
+
+  const thumbs = GALLERY.map((src, i) =>
+    '<div class="pdp-thumb ' + (i === 0 ? "active" : "") + '" onclick="setMainImg(' + i + ')">' +
+    '<img src="' + src + '" alt=""></div>').join("");
+
   return '<div class="pdp-media">' +
-    '<div class="pdp-thumbs">' + thumb + '</div>' +
-    '<div class="pdp-main">' + main + '</div>' +
+    '<div class="pdp-thumbs">' + thumbs + '</div>' +
+    '<div class="pdp-main"><img id="pdpMainImg" src="' + GALLERY[0] + '" alt="' + escapeHtml(card.name) + '"></div>' +
   '</div>';
+}
+
+function setMainImg(i) {
+  const img = document.getElementById("pdpMainImg");
+  if (img && GALLERY[i]) img.src = GALLERY[i];
+  document.querySelectorAll(".pdp-thumb").forEach((t, idx) => t.classList.toggle("active", idx === i));
 }
 
 function actionsHtml(card) {

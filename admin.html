@@ -13,29 +13,60 @@
     <div id="flash" class="note" style="display:none"></div>
 
     <div class="panel">
+      <h2>Card lookup</h2>
+      <p class="note">Type the set code (like <b>MEG</b>), pick the language, and the card number. This pulls the official card info and image. Then add your own photos below.</p>
+      <div class="row-between">
+        <div class="field" style="flex:1;min-width:110px">
+          <label>Set code</label>
+          <input id="luSet" type="text" placeholder="MEG">
+        </div>
+        <div class="field" style="width:120px">
+          <label>Language</label>
+          <select id="luLang">
+            <option value="en">English</option>
+            <option value="es">Español</option>
+          </select>
+        </div>
+        <div class="field" style="flex:1;min-width:110px">
+          <label>Number</label>
+          <input id="luNum" type="text" placeholder="159/132">
+        </div>
+      </div>
+      <button id="luBtn" class="btn btn-gold">Look up card</button>
+      <div id="luResult" style="margin-top:14px"></div>
+    </div>
+
+    <div class="panel">
       <h2 id="formTitle">Add a card</h2>
 
       <div class="field">
-        <label>Photo</label>
-        <div id="photoDrop" class="photo-drop">
-          <div id="photoPreview">&#128247; Tap to add a photo</div>
+        <label>Main image <span style="color:var(--muted);font-weight:400">(from lookup, or upload your own)</span></label>
+        <div id="mainDrop" class="photo-drop">
+          <div id="mainPreview">&#128247; Use Card lookup above, or tap to upload</div>
         </div>
-        <input id="photoInput" type="file" accept="image/*" capture="environment" style="display:none">
+        <input id="mainInput" type="file" accept="image/*" style="display:none">
+      </div>
+
+      <div class="field">
+        <label>Your photos <span style="color:var(--muted);font-weight:400">(front, back, corners — these are Saxon's real photos)</span></label>
+        <div id="addDrop" class="photo-drop">&#43; Tap to add your own photos</div>
+        <input id="addInput" type="file" accept="image/*" capture="environment" multiple style="display:none">
+        <div id="addThumbs" class="add-thumbs"></div>
       </div>
 
       <div class="field">
         <label>Card name</label>
-        <input id="name" type="text" placeholder="Charizard ex">
+        <input id="name" type="text" placeholder="Mega Gardevoir ex">
       </div>
 
       <div class="row-between">
         <div class="field" style="flex:1;min-width:160px">
           <label>Set (optional)</label>
-          <input id="set" type="text" placeholder="Obsidian Flames">
+          <input id="set" type="text" placeholder="Mega Evolution">
         </div>
         <div class="field" style="flex:1;min-width:120px">
           <label>Card number (optional)</label>
-          <input id="number" type="text" placeholder="125/197">
+          <input id="number" type="text" placeholder="159/132">
         </div>
       </div>
 
@@ -86,11 +117,11 @@
         <summary style="cursor:pointer;color:var(--muted);font-weight:700">More details (optional)</summary>
         <div style="margin-top:14px">
           <div class="row-between">
-            <div class="field" style="flex:1;min-width:150px"><label>Year</label><input id="year" type="text" placeholder="2023"></div>
+            <div class="field" style="flex:1;min-width:150px"><label>Year</label><input id="year" type="text" placeholder="2025"></div>
             <div class="field" style="flex:1;min-width:150px"><label>Language</label><input id="language" type="text" placeholder="English"></div>
           </div>
           <div class="field"><label>Card type</label><input id="cardType" type="text" placeholder="Pokémon ex"></div>
-          <div class="field"><label>Illustrator</label><input id="illustrator" type="text" placeholder="5ban Graphics"></div>
+          <div class="field"><label>Illustrator</label><input id="illustrator" type="text" placeholder="takuyoa"></div>
           <div class="field"><label>Includes</label><input id="includes" type="text" placeholder="Sleeved + Top Loader"></div>
         </div>
       </details>
