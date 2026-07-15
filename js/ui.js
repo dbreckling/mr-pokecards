@@ -21,6 +21,27 @@ function condStars(condition) {
   const map = { "Mint": 5, "Near Mint": 5, "Graded": 5, "Good": 4, "Played": 3 };
   return map[condition] || 4;
 }
+
+// Mr PokeCards Grade — Saxon's own friendly scale (NOT a professional grade).
+function pokeGrade(condition) {
+  const map = {
+    "Mint":      { tier: "Gem Mint",  stars: 5 },
+    "Near Mint": { tier: "Near Mint", stars: 5 },
+    "Graded":    { tier: "Slabbed",   stars: 5 },
+    "Good":      { tier: "Great",     stars: 4 },
+    "Played":    { tier: "Played",    stars: 3 }
+  };
+  return map[condition] || { tier: condition || "Ungraded", stars: 4 };
+}
+
+// Stable unique card ID (e.g. MPC-000421) derived from the card's id.
+function cardCode(card) {
+  if (card.cardId) return card.cardId;
+  let h = 0;
+  const s = String(card.id || card.name || "");
+  for (let i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) >>> 0;
+  return "MPC-" + String(100000 + (h % 900000));
+}
 function starsHtml(n) {
   let out = "";
   for (let i = 1; i <= 5; i++) {

@@ -60,11 +60,23 @@ function pdpHtml(card) {
     '<div class="watchlist"><span class="ic">&#9734;</span> Add to Watchlist</div>' +
     '<div class="guarantee"><span class="ic">&#128737;</span><div>' +
       '<div class="t">100% Authentic Guarantee</div>' +
-      '<div class="s">All cards are verified authentic or your money back.</div>' +
+      '<div class="s">Hand checked by Saxon, or your money back.</div>' +
     '</div></div>' +
+    verifyCardHtml(card) +
   '</div>';
 
   return '<div class="pdp">' + mediaHtml(card) + info + '</div>' + panelsHtml(card);
+}
+
+function verifyCardHtml(card) {
+  return '<div class="verify-card">' +
+    '<div class="verify-info">' +
+      '<div class="verify-badge"><span class="ic">&#10003;</span> Verified by Saxon</div>' +
+      '<div class="verify-id">Card ID: <b>' + cardCode(card) + '</b></div>' +
+      '<div class="verify-sub">Scan to open this card\'s page anytime.</div>' +
+    '</div>' +
+    '<div class="verify-qr" id="qr"></div>' +
+  '</div>';
 }
 
 function panelsHtml(card) {
@@ -85,10 +97,16 @@ function panelsHtml(card) {
     '<div class="notes-by">— Saxon &#10084;</div></div>' :
     '<div class="info-panel"><h3>Saxon\'s Notes</h3><div class="notes-quote" style="color:var(--muted)">No notes on this one yet.</div></div>';
 
+  const g = pokeGrade(card.condition);
   const n = condStars(card.condition);
-  const aspects = ["Front", "Back", "Corners", "Edges", "Surface"];
-  const cond = '<div class="info-panel"><h3>Condition Report</h3>' +
+  const aspects = ["Centering", "Corners", "Edges", "Surface"];
+  const cond = '<div class="info-panel"><h3>Mr PokeCards Grade</h3>' +
+    '<div class="grade-badge">' +
+      '<span class="grade-shield">&#9733;</span>' +
+      '<div><div class="grade-tier">' + escapeHtml(g.tier) + '</div>' + starsHtml(g.stars) + '</div>' +
+    '</div>' +
     aspects.map(a => '<div class="cond-row"><span class="k">' + a + '</span>' + starsHtml(n) + '</div>').join("") +
+    '<div class="grade-note">Saxon\'s own honest grade, not a professional grading service.</div>' +
   '</div>';
 
   return '<div class="pdp-panels">' + details + notes + cond + '</div>';
@@ -113,6 +131,17 @@ document.addEventListener("DOMContentLoaded", function () {
     '<span class="sep">/</span><span class="cur">' + escapeHtml(card.name) + '</span>';
 
   pdp.innerHTML = pdpHtml(card);
+
+  // Build the scan-to-verify QR pointing at this exact card page (adapts to whatever domain the site is on)
+  const qrEl = document.getElementById("qr");
+  if (qrEl && typeof QRCode !== "undefined") {
+    const url = location.origin + location.pathname + "?id=" + encodeURIComponent(card.id);
+    new QRCode(qrEl, {
+      text: url, width: 92, height: 92,
+      colorDark: "#0a0e1a", colorLight: "#ffffff",
+      correctLevel: QRCode.CorrectLevel.M
+    });
+  }
 
   // Related: same set first, then others; exclude this card
   const others = loadCards().filter(c => c.id !== card.id);
