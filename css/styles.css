@@ -137,9 +137,9 @@ img { max-width: 100%; }
 .hero-inner {
   max-width: var(--maxw);
   margin: 0 auto;
-  padding: 54px 20px 46px;
+  padding: 80px 20px 54px;
   display: grid;
-  grid-template-columns: 1.1fr 0.9fr;
+  grid-template-columns: 1fr 1.05fr;
   gap: 30px;
   align-items: center;
 }
@@ -162,7 +162,7 @@ img { max-width: 100%; }
 
 .hero-art {
   position: relative;
-  min-height: 300px;
+  min-height: 400px;
   border-radius: 16px;
   background:
     radial-gradient(circle at 55% 45%, rgba(230, 57, 70, 0.20), transparent 60%),
@@ -190,8 +190,8 @@ img { max-width: 100%; }
 }
 .hero-card {
   display: block;
-  width: 135px;
-  margin: 0 -20px;
+  width: 178px;
+  margin: 0 -24px;
   border-radius: 10px;
   overflow: hidden;
   box-shadow: 0 18px 34px rgba(0, 0, 0, 0.55);
@@ -591,5 +591,5 @@ img { max-width: 100%; }
   .hero h1 { font-size: 36px; }
   .cart-line { grid-template-columns: 50px 1fr; }
   .brand img { height: 72px; margin: 0 0 -30px; }
-  .hero-card { width: 80px; margin: 0 -14px; }
+  .hero-card { width: 90px; margin: 0 -14px; }
 }
