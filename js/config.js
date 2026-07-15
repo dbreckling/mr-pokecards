@@ -17,5 +17,9 @@ const CONFIG = {
 
   // Money symbol + code used for PayPal links
   currencySymbol: "$",
-  currencyCode: "USD"
+  currencyCode: "USD",
+
+  // Social links (leave "" to show "coming soon" instead of a link)
+  instagramUrl: "",   // e.g. "https://instagram.com/mrpokecards"
+  youtubeUrl: ""      // e.g. "https://youtube.com/@mrpokecards"
 };

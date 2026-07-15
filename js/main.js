@@ -36,14 +36,14 @@ document.addEventListener("DOMContentLoaded", function () {
   // Featured = cards Saxon checked "featured"; if none, fall back to the priciest for-sale cards
   const manual = cards.filter(c => c.featured);
   const featured = manual.length
-    ? manual.slice(0, 10)
-    : forSale.slice().sort((a, b) => (b.price || 0) - (a.price || 0)).slice(0, 5);
+    ? manual.slice(0, 12)
+    : forSale.slice().sort((a, b) => (b.price || 0) - (a.price || 0)).slice(0, 6);
   const fRow = document.getElementById("featuredRow");
   if (fRow) fRow.innerHTML = featured.map(cardTileHtml).join("") ||
     '<div class="empty">No cards yet. Add some in the card manager.</div>';
 
   // New arrivals = most recently added (cards are stored newest-first)
-  const newest = cards.slice(0, 5);
+  const newest = cards.slice(0, 6);
   const nRow = document.getElementById("newRow");
   if (nRow) nRow.innerHTML = newest.map(cardTileHtml).join("");
 

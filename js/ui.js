@@ -103,11 +103,53 @@ function renderHeader(active) {
       '<a href="index.html#about">About Saxon</a>' +
       '<a href="mailto:' + CONFIG.contactEmail + '">Contact</a>' +
     '</nav>' +
+    '<div class="kid-badge"><span class="dot"></span> Supporting a Young Collector</div>' +
     '<div class="header-icons">' +
       '<a class="icon-btn" href="admin.html" title="Card manager" aria-label="Card manager">&#9881;</a>' +
       '<a class="icon-btn" href="cart.html" title="Cart" aria-label="Cart">&#128722;' + badge + '</a>' +
     '</div>' +
   '</div>';
+}
+
+function renderFooter() {
+  const email = CONFIG.contactEmail;
+  const ig = CONFIG.instagramUrl
+    ? '<a href="' + CONFIG.instagramUrl + '">Instagram</a>'
+    : '<span class="soon">Instagram (coming soon)</span>';
+  const yt = CONFIG.youtubeUrl
+    ? '<a href="' + CONFIG.youtubeUrl + '">YouTube</a>'
+    : '<span class="soon">YouTube (coming soon)</span>';
+  return '' +
+  '<div class="footer-inner">' +
+    '<div class="footer-story">' +
+      '<h3>Every card has a story</h3>' +
+      '<p>Some cards stay in my collection forever.<br>' +
+      'Some cards help me buy my next booster pack.<br>' +
+      'Thanks for helping me continue my collecting journey.</p>' +
+      '<div class="footer-sign">&mdash; Saxon</div>' +
+      '<div class="footer-stamp">Kid Owned &middot; Kid Collected &middot; Collector Approved</div>' +
+    '</div>' +
+    '<div class="footer-cols">' +
+      '<div class="footer-col"><h4>Shop</h4>' +
+        '<a href="shop.html">Shop Cards</a>' +
+        '<a href="shop.html?filter=collection">My Collection</a>' +
+        '<a href="shop.html?filter=trade">For Trade</a>' +
+        '<a href="shop.html">New Arrivals</a>' +
+      '</div>' +
+      '<div class="footer-col"><h4>Collector Resources</h4>' +
+        '<a href="info.html#care">Card Care</a>' +
+        '<a href="info.html#shipping">Shipping</a>' +
+        '<a href="info.html#faq">FAQ</a>' +
+        '<a href="mailto:' + email + '">Contact</a>' +
+      '</div>' +
+      '<div class="footer-col"><h4>Follow My Journey</h4>' +
+        ig + yt +
+        '<a href="mailto:' + email + '?subject=' + encodeURIComponent("Newsletter signup") + '">Email Newsletter</a>' +
+      '</div>' +
+    '</div>' +
+  '</div>' +
+  '<div class="footer-bottom">Mr. PokeCards &middot; built by Saxon &middot; ' +
+    '<span class="dot"></span> Supporting a Young Collector</div>';
 }
 
 function updateCartBadge() {
@@ -149,4 +191,7 @@ function getParam(name) {
   return new URLSearchParams(location.search).get(name);
 }
 
-document.addEventListener("DOMContentLoaded", updateCartBadge);
+document.addEventListener("DOMContentLoaded", function () {
+  updateCartBadge();
+  document.querySelectorAll(".site-footer").forEach(f => { f.innerHTML = renderFooter(); });
+});
