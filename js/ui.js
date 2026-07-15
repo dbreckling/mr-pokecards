@@ -77,6 +77,39 @@ function extractMarketValue(card) {
   return null;
 }
 
+// Rich price data for the Price Guide panel (range from TCGplayer, 30-day trend from Cardmarket).
+function extractPriceGuide(card) {
+  const p = card.pricing ||
+    (card.variants_detailed && card.variants_detailed[0] && card.variants_detailed[0].pricing) || {};
+  const g = {};
+  const tp = p.tcgplayer;
+  if (tp) {
+    for (const k of Object.keys(tp)) {
+      const v = tp[k];
+      if (v && typeof v === "object" && v.marketPrice != null) {
+        g.market = v.marketPrice; g.low = v.lowPrice; g.mid = v.midPrice; g.high = v.highPrice;
+        g.currency = "USD"; g.source = "TCGplayer"; g.updated = (tp.updated || "").slice(0, 10);
+        break;
+      }
+    }
+  }
+  const cm = p.cardmarket;
+  if (cm) {
+    const hist = [];
+    if (cm.avg30 != null) hist.push({ label: "30d", value: cm.avg30 });
+    if (cm.avg7 != null) hist.push({ label: "7d", value: cm.avg7 });
+    if (cm.avg1 != null) hist.push({ label: "1d", value: cm.avg1 });
+    if (cm.trend != null) hist.push({ label: "Now", value: cm.trend });
+    if (hist.length >= 2) {
+      g.history = hist; g.histCurrency = "EUR"; g.histSource = "Cardmarket"; g.histUpdated = (cm.updated || "").slice(0, 10);
+    }
+    if (g.market == null && cm.trend != null) {
+      g.market = cm.trend; g.low = cm.low; g.currency = "EUR"; g.source = "Cardmarket"; g.updated = (cm.updated || "").slice(0, 10);
+    }
+  }
+  return (g.market != null || g.history) ? g : null;
+}
+
 function paypalMeLink(amount) {
   if (!CONFIG.paypalMeHandle) return "";
   return "https://www.paypal.com/paypalme/" +

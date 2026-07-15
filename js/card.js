@@ -130,7 +130,48 @@ function panelsHtml(card) {
     '<div class="grade-note">Saxon\'s own honest grade, not a professional grading service.</div>' +
   '</div>';
 
-  return '<div class="pdp-panels">' + details + notes + cond + '</div>';
+  return '<div class="pdp-panels">' + details + notes + cond + priceGuideHtml(card) + '</div>';
+}
+
+function sparklineSvg(points) {
+  const vals = points.map(p => p.value);
+  const min = Math.min(...vals), max = Math.max(...vals);
+  const w = 240, h = 56, pad = 8, range = (max - min) || 1;
+  const step = (w - 2 * pad) / (points.length - 1);
+  const coords = points.map((p, i) => [pad + i * step, h - pad - ((p.value - min) / range) * (h - 2 * pad)]);
+  const line = coords.map((c, i) => (i ? "L" : "M") + c[0].toFixed(1) + " " + c[1].toFixed(1)).join(" ");
+  const up = vals[vals.length - 1] >= vals[0];
+  const color = up ? "var(--green)" : "var(--red-soft)";
+  const dots = coords.map(c => '<circle cx="' + c[0].toFixed(1) + '" cy="' + c[1].toFixed(1) + '" r="2.5" fill="' + color + '"/>').join("");
+  return '<svg class="sparkline" viewBox="0 0 ' + w + ' ' + h + '" width="100%">' +
+    '<path d="' + line + '" fill="none" stroke="' + color + '" stroke-width="2" stroke-linejoin="round"/>' + dots + '</svg>';
+}
+
+function priceGuideHtml(card) {
+  const g = card.priceGuide;
+  if (!g) return "";
+  let bar = "";
+  if (g.low != null && g.high != null && g.market != null && g.high > g.low) {
+    const pct = Math.max(0, Math.min(100, ((g.market - g.low) / (g.high - g.low)) * 100));
+    bar = '<div class="price-range"><div class="pr-track"><div class="pr-marker" style="left:' + pct.toFixed(1) + '%"></div></div>' +
+      '<div class="pr-ends"><span>Low ' + fmtCur(g.low, g.currency) + '</span><span>High ' + fmtCur(g.high, g.currency) + '</span></div></div>';
+  }
+  let hist = "";
+  if (g.history && g.history.length >= 2) {
+    const trend = g.history[g.history.length - 1].value - g.history[0].value;
+    const tcolor = trend >= 0 ? "var(--green)" : "var(--red-soft)";
+    const arrow = trend >= 0 ? "&#9650;" : "&#9660;";
+    hist = '<div class="price-hist">' +
+      '<div class="ph-head"><span>30-day trend</span><span style="color:' + tcolor + '">' + arrow + " " + fmtCur(Math.abs(trend), g.histCurrency) + '</span></div>' +
+      sparklineSvg(g.history) +
+      '<div class="ph-labels">' + g.history.map(p => "<span>" + p.label + "</span>").join("") + '</div>' +
+      '<div class="ph-src">' + escapeHtml(g.histSource) + (g.histUpdated ? " &middot; " + escapeHtml(g.histUpdated) : "") + '</div></div>';
+  }
+  const mid = g.mid != null ? '<div class="spec-row"><span class="k">Mid price</span><span class="v">' + fmtCur(g.mid, g.currency) + '</span></div>' : "";
+  return '<div class="info-panel"><h3>Price Guide</h3>' +
+    '<div class="pg-market">' + fmtCur(g.market, g.currency) +
+    '<span class="pg-src">' + escapeHtml(g.source || "") + (g.updated ? " &middot; " + escapeHtml(g.updated) : "") + '</span></div>' +
+    mid + bar + hist + '</div>';
 }
 
 document.addEventListener("DOMContentLoaded", function () {

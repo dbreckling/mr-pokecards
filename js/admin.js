@@ -7,6 +7,7 @@ let pickedStatus = "sale";
 let pickedImage = "";      // main image (official URL from lookup, or uploaded)
 let pickedImages = [];     // Saxon's own additional photos (data URLs)
 let pickedEst = null;      // { value, currency, source, updated } market value from lookup
+let pickedGuide = null;    // rich price guide (range + 30-day trend) from lookup
 
 const EXTRA_FIELDS = ["set", "number", "year", "language", "cardType", "illustrator", "includes"];
 const TCGDEX = "https://api.tcgdex.net/v2";
@@ -139,8 +140,9 @@ async function doLookup() {
     pickedImage = card.image ? card.image + "/high.webp" : "";
     renderMainPreview();
 
-    // Real market value (TCGplayer USD, else Cardmarket EUR)
+    // Real market value (TCGplayer USD, else Cardmarket EUR) + full price guide
     pickedEst = extractMarketValue(card);
+    pickedGuide = extractPriceGuide(card);
     updateEstHint();
     const estLine = (pickedEst && pickedEst.value != null)
       ? '<div class="lu-sub">Market value ~' + fmtCur(pickedEst.value, pickedEst.currency) +
@@ -164,6 +166,7 @@ function resetForm() {
   pickedImage = "";
   pickedImages = [];
   pickedEst = null;
+  pickedGuide = null;
   el("name").value = "";
   el("condition").value = "Near Mint";
   el("rarity").value = "";
@@ -209,6 +212,7 @@ function saveForm() {
   } else {
     data.estValue = null;
   }
+  data.priceGuide = pickedGuide || null;
 
   if (editingId) updateCard(editingId, data); else addCard(data);
   resetForm();
@@ -233,6 +237,7 @@ function editCard(id) {
   pickedEst = card.estValue != null
     ? { value: card.estValue, currency: card.estCurrency, source: card.estSource, updated: card.estUpdated }
     : null;
+  pickedGuide = card.priceGuide || null;
   EXTRA_FIELDS.forEach(f => { if (el(f)) el(f).value = card[f] || ""; });
   renderMainPreview();
   renderAddThumbs();
