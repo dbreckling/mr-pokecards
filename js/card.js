@@ -72,6 +72,10 @@ function pdpHtml(card) {
     '<h1>' + escapeHtml(card.name) + '</h1>' +
     (setline ? '<div class="setline">' + escapeHtml(setline) + '</div>' : "") +
     priceBlock +
+    (card.estValue != null
+      ? '<div class="est-value">Est. market value ~' + fmtCur(card.estValue, card.estCurrency) +
+        ' &middot; ' + escapeHtml(card.estSource || "") + (card.estUpdated ? " &middot; " + escapeHtml(card.estUpdated) : "") + '</div>'
+      : "") +
     '<div class="pdp-meta">' + shipPill + '</div>' +
     '<div class="pdp-actions">' + actionsHtml(card) + '</div>' +
     '<div class="watchlist"><span class="ic">&#9734;</span> Add to Watchlist</div>' +

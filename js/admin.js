@@ -6,6 +6,7 @@ let editingId = null;
 let pickedStatus = "sale";
 let pickedImage = "";      // main image (official URL from lookup, or uploaded)
 let pickedImages = [];     // Saxon's own additional photos (data URLs)
+let pickedEst = null;      // { value, currency, source, updated } market value from lookup
 
 const EXTRA_FIELDS = ["set", "number", "year", "language", "cardType", "illustrator", "includes"];
 const TCGDEX = "https://api.tcgdex.net/v2";
@@ -33,6 +34,17 @@ function renderAddThumbs() {
 }
 
 function removeAddImage(i) { pickedImages.splice(i, 1); renderAddThumbs(); }
+
+function updateEstHint() {
+  const h = el("estHint");
+  if (pickedEst && pickedEst.value != null) {
+    h.style.display = "block";
+    h.innerHTML = "Market value ~" + fmtCur(pickedEst.value, pickedEst.currency) +
+      " (" + escapeHtml(pickedEst.source) + (pickedEst.updated ? ", " + escapeHtml(pickedEst.updated) : "") + ")";
+  } else {
+    h.style.display = "none";
+  }
+}
 
 function readImageFile(file, cb) {
   if (!file) return;
@@ -114,11 +126,19 @@ async function doLookup() {
     pickedImage = card.image ? card.image + "/high.webp" : "";
     renderMainPreview();
 
+    // Real market value (TCGplayer USD, else Cardmarket EUR)
+    pickedEst = extractMarketValue(card);
+    updateEstHint();
+    const estLine = (pickedEst && pickedEst.value != null)
+      ? '<div class="lu-sub">Market value ~' + fmtCur(pickedEst.value, pickedEst.currency) +
+        ' (' + escapeHtml(pickedEst.source) + ')</div>' : "";
+
     out.innerHTML = '<div class="lu-card">' +
       (pickedImage ? '<img src="' + pickedImage + '" alt="">' : "") +
       '<div><div class="lu-name">' + escapeHtml(card.name) + '</div>' +
       '<div class="lu-sub">' + escapeHtml(setObj.name) + ' &middot; #' + escapeHtml(card.localId) +
       (official ? "/" + official : "") + ' &middot; ' + escapeHtml(card.rarity || "") + '</div>' +
+      estLine +
       '<div class="lu-ok">&#10003; Details filled in below. Now add your own photos.</div></div></div>';
   } catch (e) {
     out.innerHTML = '<div class="lu-msg err">Lookup failed (network issue). You can still fill the form manually.</div>';
@@ -130,14 +150,17 @@ function resetForm() {
   editingId = null;
   pickedImage = "";
   pickedImages = [];
+  pickedEst = null;
   el("name").value = "";
   el("condition").value = "Near Mint";
   el("rarity").value = "";
   el("price").value = "";
   el("notes").value = "";
+  el("featured").checked = false;
   EXTRA_FIELDS.forEach(f => { if (el(f)) el(f).value = ""; });
   renderMainPreview();
   renderAddThumbs();
+  updateEstHint();
   el("luResult").innerHTML = "";
   pickStatus("sale");
   el("saveBtn").textContent = "Add this card";
@@ -159,9 +182,18 @@ function saveForm() {
     price: pickedStatus === "sale" ? Number(el("price").value || 0) : 0,
     notes: el("notes").value.trim(),
     image: main,
-    images: extras
+    images: extras,
+    featured: el("featured").checked
   };
   EXTRA_FIELDS.forEach(f => { if (el(f)) data[f] = el(f).value.trim(); });
+  if (pickedEst && pickedEst.value != null) {
+    data.estValue = pickedEst.value;
+    data.estCurrency = pickedEst.currency;
+    data.estSource = pickedEst.source;
+    data.estUpdated = pickedEst.updated;
+  } else {
+    data.estValue = null;
+  }
 
   if (editingId) updateCard(editingId, data); else addCard(data);
   resetForm();
@@ -181,9 +213,14 @@ function editCard(id) {
   if (!card.rarity) el("rarity").value = "";
   el("price").value = card.price || "";
   el("notes").value = card.notes || "";
+  el("featured").checked = !!card.featured;
+  pickedEst = card.estValue != null
+    ? { value: card.estValue, currency: card.estCurrency, source: card.estSource, updated: card.estUpdated }
+    : null;
   EXTRA_FIELDS.forEach(f => { if (el(f)) el(f).value = card[f] || ""; });
   renderMainPreview();
   renderAddThumbs();
+  updateEstHint();
   pickStatus(card.status || "sale");
   el("saveBtn").textContent = "Save changes";
   el("cancelEdit").style.display = "inline-flex";

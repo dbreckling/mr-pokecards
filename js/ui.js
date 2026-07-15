@@ -50,6 +50,33 @@ function starsHtml(n) {
   return '<span class="stars">' + out + "</span>";
 }
 
+function fmtCur(v, cur) {
+  const sym = cur === "EUR" ? "€" : (cur === "USD" ? "$" : (CONFIG.currencySymbol || "$"));
+  return sym + Number(v || 0).toFixed(2);
+}
+
+// Pull a real market value from a TCGdex card object (TCGplayer USD first, then Cardmarket EUR).
+function extractMarketValue(card) {
+  const p = card.pricing ||
+    (card.variants_detailed && card.variants_detailed[0] && card.variants_detailed[0].pricing) || {};
+  const tp = p.tcgplayer;
+  if (tp) {
+    for (const k of Object.keys(tp)) {
+      const v = tp[k];
+      if (v && typeof v === "object" && (v.marketPrice != null || v.midPrice != null)) {
+        return { value: v.marketPrice != null ? v.marketPrice : v.midPrice,
+                 currency: "USD", source: "TCGplayer", updated: (tp.updated || "").slice(0, 10) };
+      }
+    }
+  }
+  const cm = p.cardmarket;
+  if (cm && (cm.trend != null || cm.avg != null)) {
+    return { value: cm.trend != null ? cm.trend : cm.avg,
+             currency: "EUR", source: "Cardmarket", updated: (cm.updated || "").slice(0, 10) };
+  }
+  return null;
+}
+
 function paypalMeLink(amount) {
   if (!CONFIG.paypalMeHandle) return "";
   return "https://www.paypal.com/paypalme/" +

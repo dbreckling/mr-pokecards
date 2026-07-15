@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Card Manager — Mr. PokeCards</title>
-  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/styles.css?v=10">
 </head>
 <body>
   <header class="site-header"></header>
@@ -106,6 +106,14 @@
       <div class="field" id="priceField">
         <label>Price</label>
         <input id="price" type="number" min="0" step="0.01" placeholder="34.99">
+        <div id="estHint" style="color:var(--muted);font-size:13px;margin-top:6px;display:none"></div>
+      </div>
+
+      <div class="field">
+        <label style="display:flex;align-items:center;gap:10px;cursor:pointer;font-weight:700">
+          <input id="featured" type="checkbox" style="width:18px;height:18px;accent-color:var(--gold)">
+          &#11088; Show this card in the Featured section on the homepage
+        </label>
       </div>
 
       <div class="field">
@@ -146,9 +154,9 @@
     </div>
   </div>
 
-  <script src="js/config.js"></script>
-  <script src="js/store.js"></script>
-  <script src="js/ui.js"></script>
-  <script src="js/admin.js"></script>
+  <script src="js/config.js?v=10"></script>
+  <script src="js/store.js?v=10"></script>
+  <script src="js/ui.js?v=10"></script>
+  <script src="js/admin.js?v=10"></script>
 </body>
 </html>

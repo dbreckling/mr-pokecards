@@ -10,8 +10,11 @@ document.addEventListener("DOMContentLoaded", function () {
   const statEl = document.getElementById("statCount");
   if (statEl) statEl.textContent = forSale.length + " cards";
 
-  // Featured = highest priced for-sale cards
-  const featured = forSale.slice().sort((a, b) => (b.price || 0) - (a.price || 0)).slice(0, 5);
+  // Featured = cards Saxon checked "featured"; if none, fall back to the priciest for-sale cards
+  const manual = cards.filter(c => c.featured);
+  const featured = manual.length
+    ? manual.slice(0, 10)
+    : forSale.slice().sort((a, b) => (b.price || 0) - (a.price || 0)).slice(0, 5);
   const fRow = document.getElementById("featuredRow");
   if (fRow) fRow.innerHTML = featured.map(cardTileHtml).join("") ||
     '<div class="empty">No cards yet. Add some in the card manager.</div>';
