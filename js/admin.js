@@ -157,6 +157,7 @@ function resetForm() {
   el("price").value = "";
   el("notes").value = "";
   el("featured").checked = false;
+  el("hero").checked = false;
   EXTRA_FIELDS.forEach(f => { if (el(f)) el(f).value = ""; });
   renderMainPreview();
   renderAddThumbs();
@@ -183,7 +184,8 @@ function saveForm() {
     notes: el("notes").value.trim(),
     image: main,
     images: extras,
-    featured: el("featured").checked
+    featured: el("featured").checked,
+    hero: el("hero").checked
   };
   EXTRA_FIELDS.forEach(f => { if (el(f)) data[f] = el(f).value.trim(); });
   if (pickedEst && pickedEst.value != null) {
@@ -214,6 +216,7 @@ function editCard(id) {
   el("price").value = card.price || "";
   el("notes").value = card.notes || "";
   el("featured").checked = !!card.featured;
+  el("hero").checked = !!card.hero;
   pickedEst = card.estValue != null
     ? { value: card.estValue, currency: card.estCurrency, source: card.estSource, updated: card.estUpdated }
     : null;

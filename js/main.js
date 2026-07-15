@@ -2,6 +2,24 @@
 //  Homepage: featured row, new arrivals, shop-by-value chips.
 // ============================================================
 
+function heroFanHtml(cards) {
+  const angles = [
+    "rotate(-15deg) translateY(16px)",
+    "rotate(-5deg) translateY(-8px)",
+    "rotate(5deg) translateY(-8px)",
+    "rotate(15deg) translateY(16px)"
+  ];
+  const cards4 = cards.slice(0, 4);
+  return '<div class="hero-fan">' + cards4.map(function (c, i) {
+    const inner = c.image
+      ? '<img src="' + c.image + '" alt="' + escapeHtml(c.name) + '">'
+      : '<div class="hero-blank">&#9733;</div>';
+    return '<a class="hero-card" href="card.html?id=' + encodeURIComponent(c.id) + '" ' +
+      'title="' + escapeHtml(c.name) + '" style="transform:' + angles[i] + ';z-index:' + i + '">' +
+      inner + '</a>';
+  }).join("") + '</div>';
+}
+
 document.addEventListener("DOMContentLoaded", function () {
   const cards = loadCards();
   const forSale = cards.filter(c => c.status === "sale");
@@ -9,6 +27,11 @@ document.addEventListener("DOMContentLoaded", function () {
   // Stat: real count of available (for sale) cards
   const statEl = document.getElementById("statCount");
   if (statEl) statEl.textContent = forSale.length + " cards";
+
+  // Hero fan: cards Saxon marked "hero" (up to 4). Falls back to the static image.
+  const heroCards = cards.filter(c => c.hero).slice(0, 4);
+  const heroArt = document.getElementById("heroArt");
+  if (heroArt && heroCards.length) heroArt.innerHTML = heroFanHtml(heroCards);
 
   // Featured = cards Saxon checked "featured"; if none, fall back to the priciest for-sale cards
   const manual = cards.filter(c => c.featured);
