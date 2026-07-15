@@ -83,10 +83,16 @@ const SEED_CARDS = [
 ];
 
 function loadCards() {
+  // 1) Saxon's own edits in this browser (the admin working copy)
   try {
     const raw = localStorage.getItem(STORE_KEY);
     if (raw) return JSON.parse(raw);
   } catch (e) { console.warn("Could not read saved cards:", e); }
+  // 2) The published shop inventory (cards.js sets window.MRPC_CARDS) — what customers see
+  if (typeof window !== "undefined" && Array.isArray(window.MRPC_CARDS) && window.MRPC_CARDS.length) {
+    return window.MRPC_CARDS.slice();
+  }
+  // 3) Built-in demo cards
   return SEED_CARDS.slice();
 }
 
