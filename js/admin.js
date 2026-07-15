@@ -68,20 +68,33 @@ async function jget(url) {
   return r.json();
 }
 
-async function resolveSetId(setCode, lang, denom) {
-  // Try official abbreviation first
-  const byAbbr = await jget(TCGDEX + "/" + lang + "/sets?abbreviation.official=" + encodeURIComponent(setCode.toUpperCase()));
-  if (Array.isArray(byAbbr) && byAbbr.length) return byAbbr[0].id;
-  // Fallback: match by name, disambiguate by the "/NNN" total
-  const all = await jget(TCGDEX + "/" + lang + "/sets");
-  const q = setCode.toLowerCase();
-  let matches = all.filter(s => (s.name || "").toLowerCase().includes(q));
+// From a list of candidate sets, pick the best: prefer the one whose official
+// count matches the printed "/NNN" total; otherwise the largest set (the main
+// set over subsets like Trainer Gallery).
+function pickSet(cands, denom) {
+  if (!cands || !cands.length) return null;
   if (denom) {
     const d = parseInt(denom, 10);
-    const byCount = matches.filter(s => s.cardCount && s.cardCount.official === d);
-    if (byCount.length) matches = byCount;
+    const exact = cands.filter(s => s.cardCount && s.cardCount.official === d);
+    if (exact.length) return exact[0].id;
   }
-  return matches.length ? matches[0].id : null;
+  const sorted = cands.slice().sort((a, b) =>
+    ((b.cardCount && b.cardCount.official) || 0) - ((a.cardCount && a.cardCount.official) || 0));
+  return sorted[0].id;
+}
+
+async function resolveSetId(setCode, lang, denom) {
+  // Try official abbreviation first (may return several sets that share a code)
+  const byAbbr = await jget(TCGDEX + "/" + lang + "/sets?abbreviation.official=" + encodeURIComponent(setCode.toUpperCase()));
+  if (Array.isArray(byAbbr) && byAbbr.length) {
+    const id = pickSet(byAbbr, denom);
+    if (id) return id;
+  }
+  // Fallback: match by set name (any language)
+  const all = await jget(TCGDEX + "/" + lang + "/sets");
+  const q = setCode.toLowerCase();
+  const matches = all.filter(s => (s.name || "").toLowerCase().includes(q));
+  return pickSet(matches, denom);
 }
 
 async function doLookup() {
