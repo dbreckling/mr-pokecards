@@ -139,8 +139,8 @@ img { max-width: 100%; }
   margin: 0 auto;
   padding: 80px 20px 54px;
   display: grid;
-  grid-template-columns: 1fr 1.05fr;
-  gap: 30px;
+  grid-template-columns: 0.85fr 1.15fr;
+  gap: 24px;
   align-items: center;
 }
 .hero-eyebrow {
@@ -162,7 +162,7 @@ img { max-width: 100%; }
 
 .hero-art {
   position: relative;
-  min-height: 400px;
+  min-height: 480px;
   border-radius: 16px;
   background:
     radial-gradient(circle at 55% 45%, rgba(230, 57, 70, 0.20), transparent 60%),
@@ -190,8 +190,8 @@ img { max-width: 100%; }
 }
 .hero-card {
   display: block;
-  width: 178px;
-  margin: 0 -24px;
+  width: 300px;
+  margin: 0 -170px;
   border-radius: 10px;
   overflow: hidden;
   box-shadow: 0 18px 34px rgba(0, 0, 0, 0.55);
@@ -591,5 +591,5 @@ img { max-width: 100%; }
   .hero h1 { font-size: 36px; }
   .cart-line { grid-template-columns: 50px 1fr; }
   .brand img { height: 72px; margin: 0 0 -30px; }
-  .hero-card { width: 90px; margin: 0 -14px; }
+  .hero-card { width: 116px; margin: 0 -32px; }
 }
