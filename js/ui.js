@@ -155,12 +155,15 @@ function renderFooter() {
   return '' +
   '<div class="footer-inner">' +
     '<div class="footer-story">' +
-      '<h3>Every card has a story</h3>' +
-      '<p>Some cards stay in my collection forever.<br>' +
-      'Some cards help me buy my next booster pack.<br>' +
-      'Thanks for helping me continue my collecting journey.</p>' +
-      '<div class="footer-sign">&mdash; Saxon</div>' +
-      '<div class="footer-stamp">Kid Owned &middot; Kid Collected &middot; Collector Approved</div>' +
+      '<img class="footer-mascot" src="assets/saxon-sm.png?v=1" alt="Saxon" onerror="this.remove()">' +
+      '<div class="footer-story-text">' +
+        '<h3>Every card has a story</h3>' +
+        '<p>Some cards stay in my collection forever.<br>' +
+        'Some cards help me buy my next booster pack.<br>' +
+        'Thanks for helping me continue my collecting journey.</p>' +
+        '<div class="footer-sign">&mdash; Saxon</div>' +
+        '<div class="footer-stamp">Kid Owned &middot; Kid Collected &middot; Collector Approved</div>' +
+      '</div>' +
     '</div>' +
     '<div class="footer-cols">' +
       '<div class="footer-col"><h4>Shop</h4>' +

@@ -580,6 +580,9 @@ img { max-width: 100%; }
   max-width: var(--maxw); margin: 0 auto; padding: 44px 20px 30px;
   display: grid; grid-template-columns: 1.3fr 2fr; gap: 40px;
 }
+.footer-story { display: flex; gap: 20px; align-items: flex-end; }
+.footer-mascot { width: 118px; height: auto; flex: none; filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.5)); }
+.footer-story-text { flex: 1; min-width: 0; }
 .footer-story h3 { margin: 0 0 14px; color: #fff; font-size: 22px; }
 .footer-story p { color: var(--muted); line-height: 1.8; margin: 0 0 14px; font-size: 15px; }
 .footer-sign { color: var(--gold); font-weight: 700; font-size: 16px; margin-bottom: 16px; }
