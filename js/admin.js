@@ -8,6 +8,8 @@ let pickedImage = "";      // main image (official URL from lookup, or uploaded)
 let pickedImages = [];     // Saxon's own additional photos (data URLs)
 let pickedEst = null;      // { value, currency, source, updated } market value from lookup
 let pickedGuide = null;    // rich price guide (range + 30-day trend) from lookup
+let pickedTcgId = null;    // TCGdex card id (e.g. swsh9-166) for live price refresh
+let pickedTcgLang = null;  // en / es
 
 const EXTRA_FIELDS = ["set", "number", "year", "language", "cardType", "illustrator", "includes"];
 const TCGDEX = "https://api.tcgdex.net/v2";
@@ -143,6 +145,8 @@ async function doLookup() {
     // Real market value (TCGplayer USD, else Cardmarket EUR) + full price guide
     pickedEst = extractMarketValue(card);
     pickedGuide = extractPriceGuide(card);
+    pickedTcgId = setId + "-" + card.localId;
+    pickedTcgLang = lang;
     updateEstHint();
     const estLine = (pickedEst && pickedEst.value != null)
       ? '<div class="lu-sub">Market value ~' + fmtCur(pickedEst.value, pickedEst.currency) +
@@ -167,6 +171,8 @@ function resetForm() {
   pickedImages = [];
   pickedEst = null;
   pickedGuide = null;
+  pickedTcgId = null;
+  pickedTcgLang = null;
   el("name").value = "";
   el("condition").value = "Near Mint";
   el("rarity").value = "";
@@ -213,6 +219,8 @@ function saveForm() {
     data.estValue = null;
   }
   data.priceGuide = pickedGuide || null;
+  data.tcgdexId = pickedTcgId || null;
+  data.tcgLang = pickedTcgLang || null;
 
   if (editingId) updateCard(editingId, data); else addCard(data);
   resetForm();
@@ -238,6 +246,8 @@ function editCard(id) {
     ? { value: card.estValue, currency: card.estCurrency, source: card.estSource, updated: card.estUpdated }
     : null;
   pickedGuide = card.priceGuide || null;
+  pickedTcgId = card.tcgdexId || null;
+  pickedTcgLang = card.tcgLang || null;
   EXTRA_FIELDS.forEach(f => { if (el(f)) el(f).value = card[f] || ""; });
   renderMainPreview();
   renderAddThumbs();

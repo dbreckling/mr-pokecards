@@ -72,10 +72,11 @@ function pdpHtml(card) {
     '<h1>' + escapeHtml(card.name) + '</h1>' +
     (setline ? '<div class="setline">' + escapeHtml(setline) + '</div>' : "") +
     priceBlock +
-    (card.estValue != null
-      ? '<div class="est-value">Est. market value ~' + fmtCur(card.estValue, card.estCurrency) +
-        ' &middot; ' + escapeHtml(card.estSource || "") + (card.estUpdated ? " &middot; " + escapeHtml(card.estUpdated) : "") + '</div>'
-      : "") +
+    '<div class="est-value" id="estLine">' +
+      (card.estValue != null
+        ? "Est. market value ~" + fmtCur(card.estValue, card.estCurrency) + " &middot; " + escapeHtml(card.estSource || "") + (card.estUpdated ? " &middot; " + escapeHtml(card.estUpdated) : "")
+        : "") +
+    '</div>' +
     '<div class="pdp-meta">' + shipPill + '</div>' +
     '<div class="pdp-actions">' + actionsHtml(card) + '</div>' +
     '<div class="watchlist"><span class="ic">&#9734;</span> Add to Watchlist</div>' +
@@ -168,10 +169,40 @@ function priceGuideHtml(card) {
       '<div class="ph-src">' + escapeHtml(g.histSource) + (g.histUpdated ? " &middot; " + escapeHtml(g.histUpdated) : "") + '</div></div>';
   }
   const mid = g.mid != null ? '<div class="spec-row"><span class="k">Mid price</span><span class="v">' + fmtCur(g.mid, g.currency) + '</span></div>' : "";
-  return '<div class="info-panel"><h3>Price Guide</h3>' +
+  return '<div class="info-panel" id="pricePanel"><h3>Price Guide</h3>' +
     '<div class="pg-market">' + fmtCur(g.market, g.currency) +
     '<span class="pg-src">' + escapeHtml(g.source || "") + (g.updated ? " &middot; " + escapeHtml(g.updated) : "") + '</span></div>' +
     mid + bar + hist + '</div>';
+}
+
+// Re-fetch current prices from TCGdex on each visit so the value + trend stay live.
+async function refreshPrices(card) {
+  if (!card.tcgdexId) return;
+  const lang = card.tcgLang || "en";
+  let fresh;
+  try {
+    const r = await fetch("https://api.tcgdex.net/v2/" + lang + "/cards/" + encodeURIComponent(card.tcgdexId));
+    if (!r.ok) return;
+    fresh = await r.json();
+  } catch (e) { return; }
+
+  const est = extractMarketValue(fresh);
+  const guide = extractPriceGuide(fresh);
+
+  const line = document.getElementById("estLine");
+  if (line && est) {
+    line.innerHTML = "Est. market value ~" + fmtCur(est.value, est.currency) + " &middot; " +
+      escapeHtml(est.source) + (est.updated ? " &middot; " + escapeHtml(est.updated) : "");
+  }
+  if (guide) {
+    const html = priceGuideHtml(Object.assign({}, card, { priceGuide: guide }));
+    const existing = document.getElementById("pricePanel");
+    if (existing) existing.outerHTML = html;
+    else {
+      const panels = document.querySelector(".pdp-panels");
+      if (panels) panels.insertAdjacentHTML("beforeend", html);
+    }
+  }
 }
 
 document.addEventListener("DOMContentLoaded", function () {
@@ -211,4 +242,7 @@ document.addEventListener("DOMContentLoaded", function () {
   const rest = others.filter(c => !c.set || c.set !== card.set);
   const related = sameSet.concat(rest).slice(0, 8);
   document.getElementById("relatedRow").innerHTML = related.map(cardTileHtml).join("");
+
+  // Refresh market price + trend live from TCGdex
+  refreshPrices(card);
 });
