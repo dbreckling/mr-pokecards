@@ -3,6 +3,9 @@
 Saxon's Pokemon card website. Show off the collection, mark cards for sale or
 trade, and take payments with PayPal. No monthly fees.
 
+**Live site:** https://dbreckling.github.io/mr-pokecards/
+**Repo:** https://github.com/dbreckling/mr-pokecards (GitHub Pages, `main` branch)
+
 ## What's here
 
 | File | What it does |
@@ -51,13 +54,29 @@ python3 -m http.server 4321
 
 Then open http://localhost:4321
 
-## Putting it online (free options)
+## It's already online (GitHub Pages)
 
-Any static host works since there's no server code:
+Live at https://dbreckling.github.io/mr-pokecards/
 
-- **Netlify Drop** – drag the folder onto app.netlify.com/drop, done.
-- **Cloudflare Pages / GitHub Pages** – connect a repo.
-- Point `kid-pokemon.com` (or a "poke" domain) at whichever host you pick.
+### To publish a change
+
+Edit the files, then:
+
+```
+cd mr-pokecards
+git add -A
+git commit -m "describe the change"
+git push
+```
+
+Pages rebuilds automatically in about a minute.
+
+### Using kid-pokemon.com instead of the github.io URL
+
+1. In the repo: Settings > Pages > Custom domain, enter `kid-pokemon.com`.
+2. At your domain registrar, add DNS records pointing to GitHub Pages
+   (four A records to GitHub's IPs, or a CNAME to `dbreckling.github.io`).
+3. Tick "Enforce HTTPS" once it validates.
 
 ## Note on the logo/name
 
