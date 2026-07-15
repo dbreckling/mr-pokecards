@@ -11,13 +11,13 @@ document.addEventListener("DOMContentLoaded", function () {
   if (statEl) statEl.textContent = forSale.length + " cards";
 
   // Featured = highest priced for-sale cards
-  const featured = forSale.slice().sort((a, b) => (b.price || 0) - (a.price || 0)).slice(0, 8);
+  const featured = forSale.slice().sort((a, b) => (b.price || 0) - (a.price || 0)).slice(0, 5);
   const fRow = document.getElementById("featuredRow");
   if (fRow) fRow.innerHTML = featured.map(cardTileHtml).join("") ||
     '<div class="empty">No cards yet. Add some in the card manager.</div>';
 
   // New arrivals = most recently added (cards are stored newest-first)
-  const newest = cards.slice(0, 8);
+  const newest = cards.slice(0, 5);
   const nRow = document.getElementById("newRow");
   if (nRow) nRow.innerHTML = newest.map(cardTileHtml).join("");
 
