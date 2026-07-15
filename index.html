@@ -3,46 +3,79 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Mr. PokeCards</title>
+  <title>Mr. PokeCards — Buy, Collect, Trade Pokémon Cards</title>
   <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
-  <header class="site-header">
-    <a class="brand" href="index.html">
-      <img src="assets/logo.png" alt="Mr. PokeCards"
-           onerror="this.style.display='none';document.getElementById('brandText').style.display='block'">
-      <div id="brandText" style="display:none">
-        <div class="brand-fallback" id="siteName">Mr. PokeCards</div>
-        <div class="brand-sub">COLLECT &middot; TRADE &middot; SELL</div>
+  <header class="site-header" data-active="home"></header>
+
+  <section class="hero">
+    <div class="hero-inner">
+      <div class="hero-copy">
+        <h1>BUY. COLLECT.<br><span class="gold">TRADE.</span></h1>
+        <p class="lede">Premium Pokémon cards from one young collector's collection.</p>
+        <div class="hero-cta">
+          <a class="btn btn-gold btn-lg" href="shop.html">Shop Cards</a>
+          <a class="btn btn-outline btn-lg" href="shop.html?filter=collection">View My Collection</a>
+        </div>
+        <div class="hero-stats">
+          <div class="hero-stat"><span class="ic">&#9670;</span><div><div class="k" id="statCount">300+ cards</div><div class="s">Available</div></div></div>
+          <div class="hero-stat"><span class="ic">&#9679;</span><div><div class="k">New cards</div><div class="s">Every week</div></div></div>
+          <div class="hero-stat"><span class="ic">&#128666;</span><div><div class="k">Ships</div><div class="s">Worldwide</div></div></div>
+        </div>
       </div>
-    </a>
-    <div class="header-actions">
-      <a class="btn btn-yellow" href="admin.html">&#43; Add / manage cards</a>
+      <div class="hero-art">
+        <img src="assets/hero.png" alt="" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+        <div class="fan" style="display:none">
+          <div class="mini">&#9733;</div><div class="mini">&#9733;</div><div class="mini">&#9733;</div>
+        </div>
+      </div>
     </div>
-  </header>
-
-  <nav class="tabs">
-    <button class="tab active" data-filter="all">All <span class="count"></span></button>
-    <button class="tab" data-filter="sale">For Sale <span class="count"></span></button>
-    <button class="tab" data-filter="trade">For Trade <span class="count"></span></button>
-    <button class="tab" data-filter="collection">My Collection <span class="count"></span></button>
-  </nav>
-
-  <main id="grid" class="grid"></main>
-
-  <section class="trust-bar">
-    <div class="trust-item"><span class="ic">&#128737;</span> 100% Authentic</div>
-    <div class="trust-item"><span class="ic">&#128230;</span> Carefully Packed</div>
-    <div class="trust-item"><span class="ic">&#128666;</span> Fast Shipping</div>
-    <div class="trust-item"><span class="ic">&#11088;</span> Collect with Confidence</div>
   </section>
 
-  <footer style="text-align:center;color:var(--muted);padding:20px;font-size:13px">
-    <span id="siteName2">Mr. PokeCards</span> &middot; built by Saxon
-  </footer>
+  <div class="container">
+    <section class="section">
+      <div class="section-head"><h2>Featured Cards</h2><a class="view-all" href="shop.html">View all</a></div>
+      <div class="card-row" id="featuredRow"></div>
+    </section>
+
+    <section class="section" id="about">
+      <div class="meet">
+        <div class="photo" id="saxonPhoto">&#128100;</div>
+        <div>
+          <h2>Meet Saxon</h2>
+          <p>Hi, I'm Saxon! I'm 8 years old and I love collecting Pokémon cards. I started this store to help fund opening more packs and growing my collection.</p>
+          <p>Some cards are for sale. Some I'll probably never sell. Thanks for checking them out!</p>
+          <a class="btn btn-gold" href="shop.html" style="margin-top:8px">Shop my cards</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-head"><h2>New Arrivals</h2><a class="view-all" href="shop.html">View all</a></div>
+      <div class="card-row" id="newRow"></div>
+    </section>
+
+    <section class="section">
+      <div class="section-head"><h2>Shop by Value</h2></div>
+      <div class="chip-row" id="valueChips"></div>
+    </section>
+  </div>
+
+  <div class="trust-bar">
+    <div class="trust-inner">
+      <div class="trust-item"><span class="ic">&#128247;</span><div><div class="t">Actual Photos</div><div class="s">Every card photographed front and back.</div></div></div>
+      <div class="trust-item"><span class="ic">&#128230;</span><div><div class="t">Carefully Packed</div><div class="s">Sleeved, top loaded, and shipped with care.</div></div></div>
+      <div class="trust-item"><span class="ic">&#128666;</span><div><div class="t">Fast Shipping</div><div class="s">Ships next business day with tracking.</div></div></div>
+      <div class="trust-item"><span class="ic">&#128737;</span><div><div class="t">100% Authentic</div><div class="s">All cards are verified authentic.</div></div></div>
+    </div>
+  </div>
+
+  <footer class="foot">Mr. PokeCards · built by Saxon</footer>
 
   <script src="js/config.js"></script>
   <script src="js/store.js"></script>
+  <script src="js/ui.js"></script>
   <script src="js/main.js"></script>
 </body>
 </html>

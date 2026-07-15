@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Shop Cards — Mr. PokeCards</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <header class="site-header" data-active="shop"></header>
+
+  <div class="container" style="padding-top:26px">
+    <h1 id="shopTitle" style="color:#fff;margin:0 0 6px">Shop Cards</h1>
+    <p style="color:var(--muted);margin:0 0 22px" id="shopSub"></p>
+
+    <div class="tabs">
+      <button class="tab" data-filter="all">All <span class="count"></span></button>
+      <button class="tab" data-filter="sale">For Sale <span class="count"></span></button>
+      <button class="tab" data-filter="trade">For Trade <span class="count"></span></button>
+      <button class="tab" data-filter="collection">My Collection <span class="count"></span></button>
+      <div class="search-box">
+        <span class="ic">&#128269;</span>
+        <input id="search" type="text" placeholder="Search cards...">
+      </div>
+    </div>
+
+    <div class="grid" id="grid" style="padding-bottom:60px"></div>
+  </div>
+
+  <footer class="foot">Mr. PokeCards · built by Saxon</footer>
+
+  <script src="js/config.js"></script>
+  <script src="js/store.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/shop.js"></script>
+</body>
+</html>
