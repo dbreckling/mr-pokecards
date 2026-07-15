@@ -79,7 +79,7 @@ img { max-width: 100%; }
   gap: 24px;
 }
 .brand { display: flex; align-items: center; gap: 10px; }
-.brand img { height: 46px; width: auto; display: block; }
+.brand img { height: 54px; width: auto; display: block; }
 .brand-text .l1 {
   font-size: 20px; font-weight: 700; line-height: 1; letter-spacing: 0.5px;
   color: #fff;
