@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mr. PokeCards</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="index.html">
+      <img src="assets/logo.png" alt="Mr. PokeCards"
+           onerror="this.style.display='none';document.getElementById('brandText').style.display='block'">
+      <div id="brandText" style="display:none">
+        <div class="brand-fallback" id="siteName">Mr. PokeCards</div>
+        <div class="brand-sub">COLLECT &middot; TRADE &middot; SELL</div>
+      </div>
+    </a>
+    <div class="header-actions">
+      <a class="btn btn-yellow" href="admin.html">&#43; Add / manage cards</a>
+    </div>
+  </header>
+
+  <nav class="tabs">
+    <button class="tab active" data-filter="all">All <span class="count"></span></button>
+    <button class="tab" data-filter="sale">For Sale <span class="count"></span></button>
+    <button class="tab" data-filter="trade">For Trade <span class="count"></span></button>
+    <button class="tab" data-filter="collection">My Collection <span class="count"></span></button>
+  </nav>
+
+  <main id="grid" class="grid"></main>
+
+  <section class="trust-bar">
+    <div class="trust-item"><span class="ic">&#128737;</span> 100% Authentic</div>
+    <div class="trust-item"><span class="ic">&#128230;</span> Carefully Packed</div>
+    <div class="trust-item"><span class="ic">&#128666;</span> Fast Shipping</div>
+    <div class="trust-item"><span class="ic">&#11088;</span> Collect with Confidence</div>
+  </section>
+
+  <footer style="text-align:center;color:var(--muted);padding:20px;font-size:13px">
+    <span id="siteName2">Mr. PokeCards</span> &middot; built by Saxon
+  </footer>
+
+  <script src="js/config.js"></script>
+  <script src="js/store.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>

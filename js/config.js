@@ -1,0 +1,21 @@
+// ============================================================
+//  Mr. PokeCards - settings you can change
+//  This is the ONLY file a grown-up needs to edit to go live.
+// ============================================================
+
+const CONFIG = {
+  // The name shown at the top of the site
+  siteName: "Mr. PokeCards",
+
+  // Your PayPal.me username. Example: if your link is
+  // https://paypal.me/saxonscards  then put:  "saxonscards"
+  // Leave as "" until you have one and Buy buttons will explain how.
+  paypalMeHandle: "",
+
+  // Where trade offers and questions get sent (a parent's email)
+  contactEmail: "parent@example.com",
+
+  // Money symbol + code used for PayPal links
+  currencySymbol: "$",
+  currencyCode: "USD"
+};

@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Card Manager - Mr. PokeCards</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="index.html">
+      <img src="assets/logo.png" alt="Mr. PokeCards"
+           onerror="this.style.display='none';document.getElementById('brandText').style.display='block'">
+      <div id="brandText" style="display:none">
+        <div class="brand-fallback">Card Manager</div>
+        <div class="brand-sub">ADD &middot; EDIT &middot; REMOVE</div>
+      </div>
+    </a>
+    <div class="header-actions">
+      <a class="btn btn-yellow" href="index.html">&#8592; See my site</a>
+    </div>
+  </header>
+
+  <div class="wrap">
+    <div id="flash" class="note" style="display:none"></div>
+
+    <div class="panel">
+      <h2 id="formTitle">Add a card</h2>
+
+      <div class="field">
+        <label>Photo</label>
+        <div id="photoDrop" class="photo-drop">
+          <div id="photoPreview">&#128247; Tap to add a photo</div>
+        </div>
+        <input id="photoInput" type="file" accept="image/*" capture="environment" style="display:none">
+      </div>
+
+      <div class="field">
+        <label>Card name</label>
+        <input id="name" type="text" placeholder="Charizard">
+      </div>
+
+      <div class="row-between">
+        <div class="field" style="flex:1;min-width:160px">
+          <label>Set (optional)</label>
+          <input id="set" type="text" placeholder="Base Set">
+        </div>
+        <div class="field" style="flex:1;min-width:120px">
+          <label>Card number (optional)</label>
+          <input id="number" type="text" placeholder="4/102">
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Condition</label>
+        <select id="condition">
+          <option>Mint</option>
+          <option>Near Mint</option>
+          <option>Good</option>
+          <option>Played</option>
+          <option>Graded</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label>What do you want to do with it?</label>
+        <div class="status-picker">
+          <div class="status-opt on sale" data-status="sale">
+            <span class="emoji">&#128176;</span>Sell it
+          </div>
+          <div class="status-opt trade" data-status="trade">
+            <span class="emoji">&#128260;</span>Trade it
+          </div>
+          <div class="status-opt collection" data-status="collection">
+            <span class="emoji">&#11088;</span>Keep it
+          </div>
+        </div>
+      </div>
+
+      <div class="field" id="priceField">
+        <label>Price</label>
+        <input id="price" type="number" min="0" step="0.01" placeholder="25">
+      </div>
+
+      <div class="field">
+        <label>Notes (optional)</label>
+        <textarea id="notes" placeholder="Holo! One of my favorites."></textarea>
+      </div>
+
+      <div class="row-between">
+        <button id="saveBtn" class="btn btn-green">Add this card</button>
+        <button id="cancelEdit" class="btn btn-ghost" style="display:none">Cancel</button>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="row-between">
+        <h2 style="margin:0">My cards</h2>
+        <div style="display:flex;gap:8px">
+          <button id="exportBtn" class="btn btn-white">Save backup</button>
+          <button class="btn btn-white" onclick="document.getElementById('importInput').click()">Restore backup</button>
+          <input id="importInput" type="file" accept="application/json" style="display:none">
+        </div>
+      </div>
+      <p class="note">Cards are saved in this browser. Tap <b>Save backup</b> now and then to keep a copy safe.</p>
+      <div id="adminList" class="admin-list"></div>
+    </div>
+  </div>
+
+  <script src="js/config.js"></script>
+  <script src="js/store.js"></script>
+  <script src="js/admin.js"></script>
+</body>
+</html>
