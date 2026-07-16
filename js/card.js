@@ -63,9 +63,10 @@ function pdpHtml(card) {
   const rarity = card.rarity ? '<span class="rarity-tag">' + escapeHtml(card.rarity) + '</span>' : "";
   const setline = [card.set, card.number ? "#" + card.number : ""].filter(Boolean).join(" ");
   const priceBlock = card.status === "sale" ? '<div class="pdp-price">' + money(card.price) + '</div>' : "";
-  const shipPill = card.status === "sale"
+  const qtyPill = (card.qty && card.qty > 1) ? '<span class="meta-pill qty">' + card.qty + ' available</span>' : "";
+  const shipPill = (card.status === "sale"
     ? '<span class="meta-pill">' + escapeHtml(card.condition || "Near Mint") + '</span><span class="meta-pill ships">&#10003; Ships next business day</span>'
-    : '<span class="meta-pill">' + escapeHtml(card.condition || "") + '</span><span class="meta-pill">' + statusLabel(card.status) + '</span>';
+    : '<span class="meta-pill">' + escapeHtml(card.condition || "") + '</span><span class="meta-pill">' + statusLabel(card.status) + '</span>') + qtyPill;
 
   const info = '<div class="pdp-info">' +
     rarity +

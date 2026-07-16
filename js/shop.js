@@ -7,6 +7,8 @@ let minPrice = parseFloat(getParam("min"));
 let maxPrice = parseFloat(getParam("max"));
 let query = "";
 
+function publicCards() { return loadCards().filter(isPublicCard); }
+
 function priceFiltered(cards) {
   if (isNaN(minPrice) && isNaN(maxPrice)) return cards;
   return cards.filter(c => {
@@ -18,7 +20,7 @@ function priceFiltered(cards) {
 }
 
 function render() {
-  const all = priceFiltered(loadCards());
+  const all = priceFiltered(publicCards());
 
   const counts = {
     all: all.length,

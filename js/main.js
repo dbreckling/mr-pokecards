@@ -21,7 +21,7 @@ function heroFanHtml(cards) {
 }
 
 document.addEventListener("DOMContentLoaded", function () {
-  const cards = loadCards();
+  const cards = loadCards().filter(isPublicCard);
   const forSale = cards.filter(c => c.status === "sale");
 
   // Stat: real count of available (for sale) cards

@@ -60,8 +60,14 @@ const SEED_CARDS = [
   {
     id: "seed9", name: "Rayquaza VMAX", set: "Evolving Skies", number: "111/203",
     rarity: "Ultra Rare", year: "2021", language: "English", cardType: "Pokémon VMAX",
-    condition: "Near Mint", status: "trade", price: 0,
-    notes: "Looking to trade this for a Charizard!", image: ""
+    condition: "Near Mint", status: "sale", price: 44.99, qty: 2,
+    notes: "I have two of these!", image: ""
+  },
+  {
+    id: "seed13", name: "Bulk Commons & Energy", set: "Mixed sets", number: "",
+    rarity: "Common", year: "", language: "English", cardType: "Pokémon",
+    condition: "Played", status: "bulk", price: 0, qty: 240,
+    notes: "My bulk box. Just for tracking, not for the shop.", image: ""
   },
   {
     id: "seed10", name: "Pikachu", set: "Jungle", number: "60/64",

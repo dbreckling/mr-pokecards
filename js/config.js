@@ -21,5 +21,9 @@ const CONFIG = {
 
   // Social links (leave "" to show "coming soon" instead of a link)
   instagramUrl: "",   // e.g. "https://instagram.com/mrpokecards"
-  youtubeUrl: ""      // e.g. "https://youtube.com/@mrpokecards"
+  youtubeUrl: "",     // e.g. "https://youtube.com/@mrpokecards"
+
+  // Password for the card manager (/admin.html). Change this!
+  // Note: this is a light gate for casual privacy, not bank-grade security.
+  adminPassword: "pokecards"
 };

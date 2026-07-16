@@ -13,8 +13,14 @@ function money(n) {
 }
 
 function statusLabel(s) {
-  return s === "sale" ? "For Sale" : s === "trade" ? "For Trade" : "Collection";
+  if (s === "sale") return "For Sale";
+  if (s === "trade") return "For Trade";
+  if (s === "bulk") return "Personal / Bulk";
+  return "Collection";
 }
+
+// Bulk/personal cards are private — never shown on the public storefront.
+function isPublicCard(card) { return card && card.status !== "bulk"; }
 
 // Map a condition to a 0-5 star rating for the condition report.
 function condStars(condition) {
@@ -203,6 +209,7 @@ function cardTileHtml(card) {
   const rarity = card.rarity && card.rarity !== "Common"
     ? '<span class="badge badge-rarity">' + escapeHtml(card.rarity) + '</span>' : "";
   const statusBadge = '<span class="badge badge-status ' + card.status + '">' + statusLabel(card.status) + '</span>';
+  const qtyBadge = (card.qty && card.qty > 1) ? '<span class="badge badge-qty">&times;' + card.qty + '</span>' : "";
   let foot;
   if (card.status === "sale") {
     foot = '<span class="pcard-price">' + money(card.price) + '</span>' +
@@ -212,7 +219,7 @@ function cardTileHtml(card) {
     foot = '<span class="pcard-price free">' + (card.status === "trade" ? "Open to trade" : "Not for sale") + '</span>';
   }
   return '<a class="pcard" href="card.html?id=' + encodeURIComponent(card.id) + '">' +
-    '<div class="pcard-photo">' + statusBadge + rarity + back +
+    '<div class="pcard-photo">' + statusBadge + rarity + qtyBadge + back +
       '<span class="fav">&#9734;</span></div>' +
     '<div class="pcard-body">' +
       '<div class="pcard-name">' + escapeHtml(card.name) + '</div>' +

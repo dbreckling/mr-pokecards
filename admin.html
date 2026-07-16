@@ -4,9 +4,19 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Card Manager — Mr. PokeCards</title>
-  <link rel="stylesheet" href="css/styles.css?v=21">
+  <link rel="stylesheet" href="css/styles.css?v=22">
 </head>
 <body>
+  <div id="adminGate" class="admin-gate">
+    <div class="gate-box">
+      <div class="gate-title">MR <span>PokeCards</span></div>
+      <div class="gate-sub">Card Manager &middot; private</div>
+      <input id="gatePw" type="password" placeholder="Password" autocomplete="current-password">
+      <button id="gateBtn" class="btn btn-gold btn-block">Enter</button>
+      <div id="gateErr" class="gate-err"></div>
+    </div>
+  </div>
+
   <header class="site-header"></header>
 
   <div class="wrap">
@@ -25,6 +35,7 @@
           <select id="luLang">
             <option value="en">English</option>
             <option value="es">Español</option>
+            <option value="ja">日本語 (JP)</option>
           </select>
         </div>
         <div class="field" style="flex:1;min-width:110px">
@@ -92,6 +103,10 @@
             <option>Secret Rare</option>
           </select>
         </div>
+        <div class="field" style="width:120px">
+          <label>Quantity</label>
+          <input id="qty" type="number" min="1" step="1" value="1">
+        </div>
       </div>
 
       <div class="field">
@@ -100,6 +115,7 @@
           <div class="status-opt on sale" data-status="sale"><span class="emoji">&#128176;</span>Sell it</div>
           <div class="status-opt trade" data-status="trade"><span class="emoji">&#128260;</span>Trade it</div>
           <div class="status-opt collection" data-status="collection"><span class="emoji">&#11088;</span>Keep it</div>
+          <div class="status-opt bulk" data-status="bulk"><span class="emoji">&#128230;</span>Bulk / Personal<br><span style="font-size:11px;font-weight:400;color:var(--muted)">private, just for me</span></div>
         </div>
       </div>
 
@@ -157,15 +173,22 @@
           <input id="importInput" type="file" accept="application/json" style="display:none">
         </div>
       </div>
-      <p class="note"><b>Publish to website</b> downloads a <code>cards.js</code> file. Send it to a grown-up to put on the site, then everyone sees your cards. <b>Save backup</b> keeps a private copy.</p>
+      <p class="note"><b>Publish to website</b> downloads a <code>cards.js</code> file. Send it to a grown-up to put on the site, then everyone sees your cards (Bulk/Personal cards stay private). <b>Save backup</b> keeps a private copy of everything.</p>
+      <div class="admin-filters" id="adminFilters">
+        <button class="afilter active" data-f="all">All</button>
+        <button class="afilter" data-f="sale">Selling</button>
+        <button class="afilter" data-f="trade">Trade</button>
+        <button class="afilter" data-f="collection">Collection</button>
+        <button class="afilter" data-f="bulk">Bulk / Personal</button>
+      </div>
       <div id="adminList" class="admin-list"></div>
     </div>
   </div>
 
   <script src="cards.js"></script>
-  <script src="js/config.js?v=21"></script>
-  <script src="js/store.js?v=21"></script>
-  <script src="js/ui.js?v=21"></script>
-  <script src="js/admin.js?v=21"></script>
+  <script src="js/config.js?v=22"></script>
+  <script src="js/store.js?v=22"></script>
+  <script src="js/ui.js?v=22"></script>
+  <script src="js/admin.js?v=22"></script>
 </body>
 </html>
