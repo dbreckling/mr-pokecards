@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Card Manager — Mr. PokeCards</title>
-  <link rel="stylesheet" href="css/styles.css?v=23">
+  <link rel="stylesheet" href="css/styles.css?v=24">
 </head>
 <body>
   <div id="adminGate" class="admin-gate">
@@ -24,14 +24,14 @@
 
     <div class="panel">
       <h2>Card lookup</h2>
-      <p class="note">Type the set code (like <b>MEG</b>), pick the language, and the card number. This pulls the official card info and image. Then add your own photos below.</p>
+      <p class="note">Type the set code (like <b>MEG</b>), pick the <b>language printed on the card</b> (English, Spanish, or Japanese), and the card number. This pulls the official card info and image. Then add your own photos below.</p>
       <div class="row-between">
         <div class="field" style="flex:1;min-width:110px">
           <label>Set code</label>
           <input id="luSet" type="text" placeholder="MEG">
         </div>
-        <div class="field" style="width:120px">
-          <label>Language</label>
+        <div class="field" style="width:150px">
+          <label>Card language</label>
           <select id="luLang">
             <option value="en">English</option>
             <option value="es">Español</option>
@@ -186,9 +186,9 @@
   </div>
 
   <script src="cards.js"></script>
-  <script src="js/config.js?v=23"></script>
-  <script src="js/store.js?v=23"></script>
-  <script src="js/ui.js?v=23"></script>
-  <script src="js/admin.js?v=23"></script>
+  <script src="js/config.js?v=24"></script>
+  <script src="js/store.js?v=24"></script>
+  <script src="js/ui.js?v=24"></script>
+  <script src="js/admin.js?v=24"></script>
 </body>
 </html>
