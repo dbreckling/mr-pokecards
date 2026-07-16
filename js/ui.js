@@ -62,6 +62,20 @@ async function apiStripeVerify(sid) {
   } catch (e) { return null; }
 }
 
+// Pull every order's real status (paid / refunded) straight from Stripe.
+async function apiSyncOrders(key) {
+  try {
+    const r = await fetch(CHECKOUT_API, {
+      method: "POST",
+      headers: { "content-type": "application/json", "x-admin-key": key || "" },
+      body: JSON.stringify({ action: "sync" })
+    });
+    if (!r.ok) return null;
+    const d = await r.json();
+    return Array.isArray(d) ? d : null;
+  } catch (e) { return null; }
+}
+
 const ORDERS_API = "/api/orders";
 
 async function apiCreateOrder(order) {

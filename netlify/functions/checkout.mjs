@@ -7,7 +7,7 @@ export const config = { path: "/api/checkout" };
 
 const CORS = {
   "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "content-type",
+  "Access-Control-Allow-Headers": "content-type, x-admin-key",
   "Access-Control-Allow-Methods": "POST, OPTIONS",
 };
 function json(obj, status = 200) {
@@ -108,6 +108,57 @@ export default async (req) => {
     }
     const o = orders[idx];
     return json({ paid: session.payment_status === "paid", no: o.no, total: o.total, currency: o.currency });
+  }
+
+  // ---- Sync every order's real status straight from Stripe (admin) ----
+  if (body.action === "sync") {
+    const key = req.headers.get("x-admin-key") || "";
+    if (!process.env.ADMIN_WRITE_KEY || key !== process.env.ADMIN_WRITE_KEY) {
+      return json({ error: "unauthorized" }, 401);
+    }
+    const orders = (await store.get("orders", { type: "json" })) || [];
+    let changed = false;
+
+    for (const o of orders) {
+      if (!o.sessionId) continue;
+      // Once an order is fully done we still refresh it, so refunds show up too.
+      let session;
+      try {
+        session = await stripe.checkout.sessions.retrieve(o.sessionId, {
+          expand: ["payment_intent.latest_charge"],
+        });
+      } catch (e) { continue; } // session gone / bad id — leave the order as-is
+
+      const paid = session.payment_status === "paid";
+      const charge = session.payment_intent && session.payment_intent.latest_charge;
+      const refunded = !!(charge && (charge.refunded || (charge.amount_refunded || 0) > 0));
+
+      // Decide the true status from Stripe. Never downgrade a manual "shipped".
+      let next = o.status;
+      if (refunded) next = "refunded";
+      else if (paid) next = (o.status === "shipped" || o.status === "refunded") ? o.status : "paid";
+      else next = "pending";
+
+      if (next !== o.status) { o.status = next; changed = true; }
+
+      // Fill in buyer/shipping details from Stripe once we have them.
+      if (paid && (!o.buyer || !o.buyer.name)) {
+        const cd = session.customer_details || {};
+        const sh = session.shipping_details || {};
+        const a = sh.address || cd.address || {};
+        o.buyer = {
+          name: sh.name || cd.name || "",
+          email: cd.email || "",
+          phone: cd.phone || "",
+          address1: a.line1 || "", address2: a.line2 || "", city: a.city || "",
+          region: a.state || "", postal: a.postal_code || "", country: a.country || "",
+        };
+        changed = true;
+      }
+    }
+
+    if (changed) await store.setJSON("orders", orders);
+    return json(orders);
   }
 
   return json({ error: "bad action" }, 400);

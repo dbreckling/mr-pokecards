@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Orders — Mr. PokeCards</title>
-  <link rel="stylesheet" href="css/styles.css?v=28">
+  <link rel="stylesheet" href="css/styles.css?v=29">
 </head>
 <body>
   <div id="adminGate" class="admin-gate">
@@ -24,14 +24,14 @@
       <h1 style="color:#fff;margin:0">Orders</h1>
       <a class="btn btn-outline btn-sm" href="admin.html">&larr; Card manager</a>
     </div>
-    <p class="note">New orders come in as <b>Pending</b>. When you see the PayPal payment, mark it <b>Paid</b>, then <b>Shipped</b> once it's in the mail. Refunds are done in PayPal (see the note on each order).</p>
+    <p class="note">Paid status comes straight from <b>Stripe</b> every time you open this page. Once an order shows <b>Paid</b>, mark it <b>Shipped</b> when it's in the mail. Refunds are done in Stripe, then reload here.</p>
     <div id="ordersList"></div>
   </div>
 
   <script src="cards.js"></script>
-  <script src="js/config.js?v=28"></script>
-  <script src="js/store.js?v=28"></script>
-  <script src="js/ui.js?v=28"></script>
-  <script src="js/orders.js?v=28"></script>
+  <script src="js/config.js?v=29"></script>
+  <script src="js/store.js?v=29"></script>
+  <script src="js/ui.js?v=29"></script>
+  <script src="js/orders.js?v=29"></script>
 </body>
 </html>

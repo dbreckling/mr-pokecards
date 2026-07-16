@@ -36,7 +36,7 @@ function orderCard(o, idx) {
     '</div>' +
     '<div class="order-actions">' +
       '<label>Status: <select onchange="setStatus(' + idx + ', this.value)">' + opts + '</select></label>' +
-      (o.status === "refunded" ? '' : '<span class="order-hint">Refund? Do it in PayPal, then set status to Refunded.</span>') +
+      (o.status === "refunded" ? '' : '<span class="order-hint">Refund? Do it in Stripe, then reload this page.</span>') +
     '</div>' +
   '</div>';
 }
@@ -55,8 +55,10 @@ async function setStatus(idx, status) {
 
 async function loadOrders() {
   const list = document.getElementById("ordersList");
-  list.innerHTML = '<div class="empty">Loading orders…</div>';
-  const data = await apiGetOrders(adminKey());
+  list.innerHTML = '<div class="empty">Checking Stripe for the latest…</div>';
+  // Ask Stripe for the real status of every order (paid / refunded), then render.
+  let data = await apiSyncOrders(adminKey());
+  if (!Array.isArray(data)) data = await apiGetOrders(adminKey()); // fallback if sync fails
   ORDERS = Array.isArray(data) ? data : [];
   renderOrders();
 }
