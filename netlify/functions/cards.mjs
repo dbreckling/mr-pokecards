@@ -23,6 +23,11 @@ export default async (req) => {
   const store = getStore("mrpokecards");
 
   if (req.method === "GET") {
+    // Safe diagnostic: reports only whether the key is set + its length, never the value
+    if (new URL(req.url).searchParams.has("debug")) {
+      const k = process.env.ADMIN_WRITE_KEY || "";
+      return json({ hasKey: !!k, keyLength: k.length });
+    }
     const all = (await store.get("cards", { type: "json" })) || [];
     const key = req.headers.get("x-admin-key") || "";
     const isAdmin = process.env.ADMIN_WRITE_KEY && key === process.env.ADMIN_WRITE_KEY;
