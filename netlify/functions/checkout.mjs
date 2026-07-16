@@ -54,6 +54,17 @@ export default async (req) => {
       const img = photo || (/^https?:\/\//.test(c.image || "") ? c.image : null);
       const product_data = { name: c.name + (c.set ? " (" + c.set + ")" : "") };
       if (img) product_data.images = [img];
+      // Card details under the name (Set is already in the name, so skip it here).
+      const bits = [];
+      if (c.condition) bits.push(c.condition);
+      if (c.rarity) bits.push(c.rarity);
+      if (c.cardType) bits.push(c.cardType);
+      if (c.number) bits.push("#" + c.number);
+      if (c.language) bits.push(c.language);
+      if (c.year) bits.push(String(c.year));
+      if (c.illustrator) bits.push("Illus. " + c.illustrator);
+      const description = bits.join(" · ");   // middot separator
+      if (description) product_data.description = description;
       line_items.push({
         quantity: qty,
         price_data: {
