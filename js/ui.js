@@ -129,6 +129,7 @@ function statusLabel(s) {
   if (s === "sale") return "For Sale";
   if (s === "trade") return "For Trade";
   if (s === "bulk") return "Personal / Bulk";
+  if (s === "sold") return "Sold";
   return "Collection";
 }
 
@@ -321,10 +322,15 @@ function cardTileHtml(card) {
     : '<div class="cardback"><div class="emblem">&#9733;</div><div class="nm">' + escapeHtml(card.name) + '</div></div>';
   const rarity = card.rarity && card.rarity !== "Common"
     ? '<span class="badge badge-rarity">' + escapeHtml(card.rarity) + '</span>' : "";
-  const statusBadge = '<span class="badge badge-status ' + card.status + '">' + statusLabel(card.status) + '</span>';
-  const qtyBadge = (card.qty && card.qty > 1) ? '<span class="badge badge-qty">&times;' + card.qty + '</span>' : "";
+  // A for-sale card with no stock left reads as sold.
+  const soldOut = card.status === "sold" || (card.status === "sale" && cardAvail(card) <= 0);
+  const dispStatus = soldOut ? "sold" : card.status;
+  const statusBadge = '<span class="badge badge-status ' + dispStatus + '">' + statusLabel(dispStatus) + '</span>';
+  const qtyBadge = (!soldOut && card.qty && card.qty > 1) ? '<span class="badge badge-qty">&times;' + card.qty + '</span>' : "";
   let foot;
-  if (card.status === "sale") {
+  if (soldOut) {
+    foot = '<span class="pcard-price free">Sold</span>';
+  } else if (card.status === "sale") {
     foot = '<span class="pcard-price">' + money(card.price) + '</span>' +
       '<button class="mini-btn" title="Add to cart" aria-label="Add to cart" ' +
       'onclick="event.stopPropagation();event.preventDefault();addToCart(\'' + card.id + '\');updateCartBadge();">&#43;</button>';

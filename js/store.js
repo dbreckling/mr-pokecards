@@ -130,14 +130,28 @@ function loadCart() {
   catch (e) { return {}; }
 }
 function saveCart(cart) { localStorage.setItem(CART_KEY, JSON.stringify(cart)); }
+// How many of a card can actually be bought (0 unless it's for sale + in stock).
+function cardAvail(card) {
+  if (!card || card.status !== "sale") return 0;
+  const q = Number(card.qty);
+  return Math.max(0, Number.isFinite(q) ? q : 1);
+}
 function addToCart(id) {
   const cart = loadCart();
-  cart[id] = (cart[id] || 0) + 1;
+  const max = cardAvail(getCard(id));
+  const cur = cart[id] || 0;
+  if (cur >= max) {
+    if (max > 0 && typeof alert === "function") alert("Only " + max + " of this card " + (max === 1 ? "is" : "are") + " available.");
+    return cartCount();
+  }
+  cart[id] = cur + 1;
   saveCart(cart);
   return cartCount();
 }
 function setCartQty(id, qty) {
   const cart = loadCart();
+  const max = cardAvail(getCard(id));
+  qty = Math.min(qty, max);          // never exceed stock
   if (qty <= 0) delete cart[id]; else cart[id] = qty;
   saveCart(cart);
 }
@@ -151,7 +165,10 @@ function cartItems() {
   const cart = loadCart();
   return Object.keys(cart).map(id => {
     const card = getCard(id);
-    return card ? { card: card, qty: cart[id] } : null;
+    if (!card) return null;
+    const max = cardAvail(card);
+    if (max <= 0) return null;                 // sold out / no longer for sale
+    return { card: card, qty: Math.min(cart[id], max) };   // never exceed stock
   }).filter(Boolean);
 }
 function cartTotal() {

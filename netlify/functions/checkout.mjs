@@ -16,6 +16,31 @@ function json(obj, status = 200) {
 
 const SHIP_COUNTRIES = ["US", "CA", "GB", "IE", "ES", "FR", "DE", "IT", "PT", "NL", "BE", "AU", "NZ", "JP", "MX"];
 
+// Adjust stock when an order is paid (dir -1) or refunded (dir +1).
+// When a for-sale card hits 0 it becomes "sold"; a refund brings it back.
+async function applyInventory(store, order, dir) {
+  const cards = (await store.get("cards", { type: "json" })) || [];
+  const byId = {};
+  cards.forEach(c => { byId[c.id] = c; });
+  let changed = false;
+  for (const it of (order.items || [])) {
+    const c = byId[it.id];
+    if (!c) continue;
+    const n = Math.max(1, parseInt(it.qty, 10) || 1);
+    let q = Number(c.qty);
+    if (!Number.isFinite(q)) q = 1;
+    if (dir < 0) {
+      c.qty = Math.max(0, q - n);
+      if (c.qty <= 0 && c.status === "sale") c.status = "sold";
+    } else {
+      c.qty = q + n;
+      if (c.status === "sold" && c.qty > 0) c.status = "sale";
+    }
+    changed = true;
+  }
+  if (changed) await store.setJSON("cards", cards);
+}
+
 export default async (req) => {
   if (req.method === "OPTIONS") return new Response("", { headers: CORS });
   if (req.method !== "POST") return json({ error: "method not allowed" }, 405);
@@ -46,7 +71,10 @@ export default async (req) => {
       if (!c || c.status !== "sale") continue;      // only sellable cards
       const price = Number(c.price) || 0;
       if (price <= 0) continue;
-      const qty = Math.max(1, parseInt(w.qty, 10) || 1);
+      // Never let anyone buy more than Saxon has in stock (authoritative check).
+      const avail = Number.isFinite(Number(c.qty)) ? Number(c.qty) : 1;
+      if (avail <= 0) continue;
+      const qty = Math.min(avail, Math.max(1, parseInt(w.qty, 10) || 1));
       total += price * qty;
       // Show the card photo on Stripe's page: prefer Saxon's own photo, fall back
       // to the official card image. Only public http(s) URLs (Stripe rejects data URLs).
@@ -124,6 +152,10 @@ export default async (req) => {
         address1: a.line1 || "", address2: a.line2 || "", city: a.city || "",
         region: a.state || "", postal: a.postal_code || "", country: a.country || "",
       };
+      if (!orders[idx].inventoryApplied) {   // deplete stock once
+        await applyInventory(store, orders[idx], -1);
+        orders[idx].inventoryApplied = true;
+      }
       await store.setJSON("orders", orders);
     }
     const o = orders[idx];
@@ -160,6 +192,16 @@ export default async (req) => {
       else next = "pending";
 
       if (next !== o.status) { o.status = next; changed = true; }
+
+      // Keep stock in sync with Stripe: deplete once when paid, restore on refund.
+      const nowPaid = next === "paid" || next === "shipped";
+      if (nowPaid && !o.inventoryApplied) {
+        await applyInventory(store, o, -1);
+        o.inventoryApplied = true; changed = true;
+      } else if (next === "refunded" && o.inventoryApplied) {
+        await applyInventory(store, o, 1);
+        o.inventoryApplied = false; changed = true;
+      }
 
       // Fill in buyer/shipping details from Stripe once we have them.
       if (paid && (!o.buyer || !o.buyer.name)) {

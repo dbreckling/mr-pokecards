@@ -7,17 +7,26 @@ function lineHtml(item) {
   const th = c.image
     ? '<div class="th"><img src="' + c.image + '" alt=""></div>'
     : '<div class="th">&#9733;</div>';
+  const max = cardAvail(c);
+  const atMax = item.qty >= max;
+  const plusBtn = atMax
+    ? '<button disabled style="opacity:.35;cursor:not-allowed">&plus;</button>'
+    : '<button onclick="chg(\'' + c.id + '\',' + (item.qty + 1) + ')">&plus;</button>';
+  const stockNote = max > 1
+    ? '<div style="color:var(--muted);font-size:12px">' + max + ' available' + (atMax ? ' (max)' : '') + '</div>'
+    : (atMax ? '<div style="color:var(--muted);font-size:12px">Only 1 available</div>' : '');
   return '<div class="cart-line">' +
     th +
     '<div>' +
       '<div style="font-weight:700;color:#fff"><a href="card.html?id=' + encodeURIComponent(c.id) + '">' + escapeHtml(c.name) + '</a></div>' +
       '<div style="color:var(--muted);font-size:13px">' + escapeHtml(c.set || "") +
         (c.condition ? " · " + escapeHtml(c.condition) : "") + '</div>' +
+      stockNote +
     '</div>' +
     '<div class="qty">' +
       '<button onclick="chg(\'' + c.id + '\',' + (item.qty - 1) + ')">&minus;</button>' +
       '<span>' + item.qty + '</span>' +
-      '<button onclick="chg(\'' + c.id + '\',' + (item.qty + 1) + ')">&plus;</button>' +
+      plusBtn +
     '</div>' +
     '<div style="text-align:right;min-width:80px">' +
       '<div style="color:var(--gold);font-weight:800">' + money((c.price || 0) * item.qty) + '</div>' +
@@ -47,7 +56,7 @@ function render() {
       '<div class="row total"><span>Total</span><span class="amt">' + money(total) + '</span></div>' +
       checkout +
       '<div style="color:var(--muted);font-size:12px;text-align:center;margin-top:12px">' +
-        'Next you\'ll enter your shipping details, then pay securely with PayPal.' +
+        'Next you\'ll enter your shipping details, then pay securely by card.' +
       '</div>' +
     '</div>' +
     '<div style="margin-top:16px"><a href="shop.html" style="color:var(--gold)">&larr; Keep shopping</a></div>';

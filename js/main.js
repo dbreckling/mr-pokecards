@@ -38,8 +38,11 @@ document.addEventListener("DOMContentLoaded", async function () {
       : '<img src="assets/hero.png" alt="">';
   }
 
-  // Featured = cards Saxon checked "featured"; if none, fall back to the priciest for-sale cards
-  const manual = cards.filter(c => c.featured);
+  // Not sold out: for display rows we only want cards a buyer can still act on
+  const notSold = c => !(c.status === "sold" || (c.status === "sale" && cardAvail(c) <= 0));
+
+  // Featured = cards Saxon checked "featured" (in stock); else the priciest for-sale cards
+  const manual = cards.filter(c => c.featured && notSold(c));
   const featured = manual.length
     ? manual.slice(0, 12)
     : forSale.slice().sort((a, b) => (b.price || 0) - (a.price || 0)).slice(0, 6);
@@ -47,8 +50,8 @@ document.addEventListener("DOMContentLoaded", async function () {
   if (fRow) fRow.innerHTML = featured.map(cardTileHtml).join("") ||
     '<div class="empty">No cards yet. Add some in the card manager.</div>';
 
-  // New arrivals = most recently added (cards are stored newest-first)
-  const newest = cards.slice(0, 6);
+  // New arrivals = most recently added (cards are stored newest-first), sold ones hidden
+  const newest = cards.filter(notSold).slice(0, 6);
   const nRow = document.getElementById("newRow");
   if (nRow) nRow.innerHTML = newest.map(cardTileHtml).join("");
 

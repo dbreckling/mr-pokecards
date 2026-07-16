@@ -34,6 +34,10 @@ function setMainImg(i) {
 }
 
 function actionsHtml(card) {
+  const soldOut = card.status === "sold" || (card.status === "sale" && cardAvail(card) <= 0);
+  if (soldOut) {
+    return '<div class="meta-pill" style="padding:14px;text-align:center;width:100%;font-weight:700">Sold. No longer available.</div>';
+  }
   if (card.status === "sale") {
     return '<button class="btn btn-gold btn-lg btn-block" onclick="addToCart(\'' + card.id + '\');location.href=\'checkout.html\'">Buy Now &middot; ' + money(card.price) + '</button>' +
       '<button class="btn btn-outline btn-lg btn-block" onclick="addToCart(\'' + card.id + '\');updateCartBadge();this.textContent=\'Added to cart \\u2713\';">' +
