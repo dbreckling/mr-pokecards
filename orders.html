@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Orders — Mr. PokeCards</title>
+  <link rel="stylesheet" href="css/styles.css?v=27">
+</head>
+<body>
+  <div id="adminGate" class="admin-gate">
+    <div class="gate-box">
+      <div class="gate-title">MR <span>PokeCards</span></div>
+      <div class="gate-sub">Orders &middot; private</div>
+      <input id="gatePw" type="password" placeholder="Password" autocomplete="current-password">
+      <button id="gateBtn" class="btn btn-gold btn-block">Enter</button>
+      <div id="gateErr" class="gate-err"></div>
+    </div>
+  </div>
+
+  <header class="site-header"></header>
+
+  <div class="wrap" style="max-width:900px">
+    <div class="row-between" style="margin-bottom:8px">
+      <h1 style="color:#fff;margin:0">Orders</h1>
+      <a class="btn btn-outline btn-sm" href="admin.html">&larr; Card manager</a>
+    </div>
+    <p class="note">New orders come in as <b>Pending</b>. When you see the PayPal payment, mark it <b>Paid</b>, then <b>Shipped</b> once it's in the mail. Refunds are done in PayPal (see the note on each order).</p>
+    <div id="ordersList"></div>
+  </div>
+
+  <script src="cards.js"></script>
+  <script src="js/config.js?v=27"></script>
+  <script src="js/store.js?v=27"></script>
+  <script src="js/ui.js?v=27"></script>
+  <script src="js/orders.js?v=27"></script>
+</body>
+</html>

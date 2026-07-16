@@ -35,11 +35,7 @@ function setMainImg(i) {
 
 function actionsHtml(card) {
   if (card.status === "sale") {
-    const link = paypalMeLink(card.price);
-    const buy = link
-      ? '<a class="btn btn-gold btn-lg btn-block" href="' + link + '" target="_blank" rel="noopener">Buy Now · ' + money(card.price) + '</a>'
-      : '<button class="btn btn-gold btn-lg btn-block" onclick="alert(\'Ask a grown-up to set the PayPal.me username in js/config.js so Buy Now works.\')">Buy Now · ' + money(card.price) + '</button>';
-    return buy +
+    return '<button class="btn btn-gold btn-lg btn-block" onclick="addToCart(\'' + card.id + '\');location.href=\'checkout.html\'">Buy Now &middot; ' + money(card.price) + '</button>' +
       '<button class="btn btn-outline btn-lg btn-block" onclick="addToCart(\'' + card.id + '\');updateCartBadge();this.textContent=\'Added to cart \\u2713\';">' +
       '&#128722; Add to Cart</button>';
   }

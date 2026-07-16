@@ -40,6 +40,39 @@ async function apiVerifyKey(key) {
   } catch (e) { return null; }
 }
 
+const ORDERS_API = "/api/orders";
+
+async function apiCreateOrder(order) {
+  try {
+    const r = await fetch(ORDERS_API, {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ newOrder: order })
+    });
+    return r.ok;
+  } catch (e) { return false; }
+}
+
+async function apiGetOrders(key) {
+  try {
+    const r = await fetch(ORDERS_API, { cache: "no-store", headers: { "x-admin-key": key || "" } });
+    if (!r.ok) return null;
+    const d = await r.json();
+    return Array.isArray(d) ? d : null;
+  } catch (e) { return null; }
+}
+
+async function apiSaveOrders(orders, key) {
+  try {
+    const r = await fetch(ORDERS_API, {
+      method: "POST",
+      headers: { "content-type": "application/json", "x-admin-key": key || "" },
+      body: JSON.stringify({ orders })
+    });
+    return r.ok;
+  } catch (e) { return false; }
+}
+
 // Load the shared inventory into window.MRPC_CARDS before rendering the storefront.
 async function bootstrapCards() {
   const cards = await apiGetCards();

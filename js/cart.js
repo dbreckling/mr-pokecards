@@ -38,10 +38,7 @@ function render() {
   }
 
   const total = cartTotal();
-  const link = paypalMeLink(total);
-  const checkout = link
-    ? '<a class="btn btn-gold btn-lg btn-block" href="' + link + '" target="_blank" rel="noopener" style="margin-top:14px">Check Out with PayPal · ' + money(total) + '</a>'
-    : '<button class="btn btn-gold btn-lg btn-block" style="margin-top:14px" onclick="alert(\'Ask a grown-up to set the PayPal.me username in js/config.js so checkout works.\')">Check Out with PayPal · ' + money(total) + '</button>';
+  const checkout = '<a class="btn btn-gold btn-lg btn-block" href="checkout.html" style="margin-top:14px">Checkout &middot; ' + money(total) + '</a>';
 
   body.innerHTML =
     items.map(lineHtml).join("") +
@@ -50,7 +47,7 @@ function render() {
       '<div class="row total"><span>Total</span><span class="amt">' + money(total) + '</span></div>' +
       checkout +
       '<div style="color:var(--muted);font-size:12px;text-align:center;margin-top:12px">' +
-        'You\'ll be sent to PayPal to pay Saxon directly. Add a note with your shipping address.' +
+        'Next you\'ll enter your shipping details, then pay securely with PayPal.' +
       '</div>' +
     '</div>' +
     '<div style="margin-top:16px"><a href="shop.html" style="color:var(--gold)">&larr; Keep shopping</a></div>';
