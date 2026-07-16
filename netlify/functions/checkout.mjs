@@ -48,12 +48,18 @@ export default async (req) => {
       if (price <= 0) continue;
       const qty = Math.max(1, parseInt(w.qty, 10) || 1);
       total += price * qty;
+      // Show the card photo on Stripe's page: prefer Saxon's own photo, fall back
+      // to the official card image. Only public http(s) URLs (Stripe rejects data URLs).
+      const photo = (Array.isArray(c.images) ? c.images : []).find(u => /^https?:\/\//.test(u || ""));
+      const img = photo || (/^https?:\/\//.test(c.image || "") ? c.image : null);
+      const product_data = { name: c.name + (c.set ? " (" + c.set + ")" : "") };
+      if (img) product_data.images = [img];
       line_items.push({
         quantity: qty,
         price_data: {
           currency,
           unit_amount: Math.round(price * 100),
-          product_data: { name: c.name + (c.set ? " (" + c.set + ")" : "") },
+          product_data,
         },
       });
       orderItems.push({ id: c.id, name: c.name, set: c.set || "", qty, price });
@@ -69,6 +75,9 @@ export default async (req) => {
       line_items,
       shipping_address_collection: { allowed_countries: SHIP_COUNTRIES },
       phone_number_collection: { enabled: true },
+      custom_text: {
+        submit: { message: "Every card ships next business day, sleeved and toploaded, with a handwritten thank-you note from Saxon. Thanks for supporting a young collector!" },
+      },
       success_url: origin + "/success.html?sid={CHECKOUT_SESSION_ID}",
       cancel_url: origin + "/cart.html",
       client_reference_id: no,
