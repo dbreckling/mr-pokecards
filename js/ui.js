@@ -40,6 +40,28 @@ async function apiVerifyKey(key) {
   } catch (e) { return null; }
 }
 
+const CHECKOUT_API = "/api/checkout";
+
+async function apiStripeCreate(items, currency) {
+  try {
+    const r = await fetch(CHECKOUT_API, {
+      method: "POST", headers: { "content-type": "application/json" },
+      body: JSON.stringify({ action: "create", items, currency })
+    });
+    return await r.json().catch(() => null);
+  } catch (e) { return null; }
+}
+
+async function apiStripeVerify(sid) {
+  try {
+    const r = await fetch(CHECKOUT_API, {
+      method: "POST", headers: { "content-type": "application/json" },
+      body: JSON.stringify({ action: "verify", sid })
+    });
+    return await r.json().catch(() => null);
+  } catch (e) { return null; }
+}
+
 const ORDERS_API = "/api/orders";
 
 async function apiCreateOrder(order) {
