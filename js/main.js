@@ -32,7 +32,11 @@ document.addEventListener("DOMContentLoaded", async function () {
   // Hero fan: cards Saxon marked "hero" (up to 4). Falls back to the static image.
   const heroCards = cards.filter(c => c.hero).slice(0, 4);
   const heroArt = document.getElementById("heroArt");
-  if (heroArt && heroCards.length) heroArt.innerHTML = heroFanHtml(heroCards);
+  if (heroArt) {
+    heroArt.innerHTML = heroCards.length
+      ? heroFanHtml(heroCards)
+      : '<img src="assets/hero.png" alt="">';
+  }
 
   // Featured = cards Saxon checked "featured"; if none, fall back to the priciest for-sale cards
   const manual = cards.filter(c => c.featured);
