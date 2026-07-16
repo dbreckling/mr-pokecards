@@ -10,7 +10,7 @@ const CONFIG = {
   // Your PayPal.me username. Example: if your link is
   // https://paypal.me/saxonscards  then put:  "saxonscards"
   // Leave as "" until you have one and Buy buttons will explain how.
-  paypalMeHandle: "",
+  paypalMeHandle: "mrpokecard",
 
   // Where trade offers and questions get sent (a parent's email)
   contactEmail: "parent@example.com",
