@@ -3,6 +3,7 @@
 // ============================================================
 
 let ORDERS = [];
+let CARDS_BY_ID = {};   // id -> full card, for photos on the packing slip
 const STATUSES = ["pending", "paid", "shipped", "refunded"];
 
 function adminKey() { return sessionStorage.getItem("mrpc.key") || ""; }
@@ -36,6 +37,7 @@ function orderCard(o, idx) {
     '</div>' +
     '<div class="order-actions">' +
       '<label>Status: <select onchange="setStatus(' + idx + ', this.value)">' + opts + '</select></label>' +
+      '<button class="btn btn-outline btn-sm" onclick="printPackingSlip(' + idx + ')">🖨 Print packing slip</button>' +
       (o.status === "refunded" ? '' : '<span class="order-hint">Refund? Do it in Stripe, then reload this page.</span>') +
     '</div>' +
   '</div>';
@@ -56,12 +58,92 @@ async function setStatus(idx, status) {
 async function loadOrders() {
   const list = document.getElementById("ordersList");
   list.innerHTML = '<div class="empty">Checking Stripe for the latest…</div>';
-  // Ask Stripe for the real status of every order (paid / refunded), then render.
-  let data = await apiSyncOrders(adminKey());
+  // Pull card photos (for packing slips) and the live order list in parallel.
+  const [cards, synced] = await Promise.all([
+    apiGetCards(adminKey()),
+    apiSyncOrders(adminKey()),
+  ]);
+  CARDS_BY_ID = {};
+  (Array.isArray(cards) ? cards : []).forEach(c => { CARDS_BY_ID[c.id] = c; });
+  let data = synced;
   if (!Array.isArray(data)) data = await apiGetOrders(adminKey()); // fallback if sync fails
   ORDERS = Array.isArray(data) ? data : [];
   renderOrders();
 }
+
+// ---- Printable packing slip (logo + card photo + unique ID + verify QR) ----
+function slipItemRow(it, i) {
+  const card = CARDS_BY_ID[it.id] || {};
+  const code = cardCode({ id: it.id, name: it.name });
+  const photo = (Array.isArray(card.images) ? card.images : []).find(u => /^https?:\/\//.test(u || ""));
+  const img = photo || (/^https?:\/\//.test(card.image || "") ? card.image : "");
+  return '<tr>' +
+    '<td class="ps-thumb">' + (img ? '<img src="' + escapeHtml(img) + '" alt="">' : '') + '</td>' +
+    '<td class="ps-item">' +
+      '<div class="ps-name">' + escapeHtml(it.name) + (it.set ? ' <span>(' + escapeHtml(it.set) + ')</span>' : '') + '</div>' +
+      '<div class="ps-id">Card ID: <b>' + escapeHtml(code) + '</b></div>' +
+      '<div class="ps-verify">&#10003; Verified by Saxon</div>' +
+    '</td>' +
+    '<td class="ps-qty">&times;' + (it.qty || 1) + '</td>' +
+    '<td class="ps-qr"><div id="psqr_' + i + '"></div><div class="ps-scan">Scan to verify</div></td>' +
+  '</tr>';
+}
+
+function printPackingSlip(idx) {
+  const o = ORDERS[idx];
+  if (!o) return;
+  const b = o.buyer || {};
+  const rows = (o.items || []).map(slipItemRow).join("");
+  const hasAddr = b.name || b.address1;
+  const site = (location.host || "mrpokecards.com").replace(/^www\./, "");
+
+  document.getElementById("printArea").innerHTML =
+    '<div class="ps">' +
+      '<div class="ps-head">' +
+        '<img class="ps-logo" src="assets/logo.png" alt="Mr. PokeCards">' +
+        '<div class="ps-title">Packing Slip</div>' +
+      '</div>' +
+      '<div class="ps-meta">' +
+        '<div><span class="ps-lbl">Order</span>' + escapeHtml(o.no || "") + '</div>' +
+        '<div><span class="ps-lbl">Date</span>' + escapeHtml((o.date || "").slice(0, 10)) + '</div>' +
+        '<div><span class="ps-lbl">Status</span>' + escapeHtml(o.status || "") + '</div>' +
+      '</div>' +
+      '<div class="ps-ship">' +
+        '<span class="ps-lbl">Ship to</span>' +
+        '<div class="ps-addr">' + (hasAddr ?
+          ('<b>' + escapeHtml(b.name || "") + '</b><br>' +
+           escapeHtml(b.address1 || "") + (b.address2 ? '<br>' + escapeHtml(b.address2) : "") + '<br>' +
+           escapeHtml(b.city || "") + ", " + escapeHtml(b.region || "") + " " + escapeHtml(b.postal || "") + '<br>' +
+           escapeHtml(b.country || "")) :
+          '<i>No shipping details yet (order not paid).</i>') +
+        '</div>' +
+      '</div>' +
+      '<table class="ps-table"><tbody>' + rows + '</tbody></table>' +
+      '<div class="ps-note">' +
+        '<p>Thanks so much for your order! Every card is hand checked, sleeved, and toploaded by me. Scan the QR on any card to open its page and see its unique ID.</p>' +
+        '<p class="ps-sign">Thanks, Saxon</p>' +
+        '<div class="ps-tag">KID OWNED &middot; KID COLLECTED &middot; COLLECTOR APPROVED</div>' +
+        '<div class="ps-url">' + escapeHtml(site) + '</div>' +
+      '</div>' +
+    '</div>';
+
+  // Render one verify-QR per item, pointing at that card's page on this domain.
+  (o.items || []).forEach((it, i) => {
+    const el = document.getElementById("psqr_" + i);
+    if (el && typeof QRCode !== "undefined") {
+      el.innerHTML = "";
+      new QRCode(el, {
+        text: location.origin + "/card.html?id=" + encodeURIComponent(it.id),
+        width: 80, height: 80, colorDark: "#000000", colorLight: "#ffffff",
+        correctLevel: QRCode.CorrectLevel.M,
+      });
+    }
+  });
+
+  document.body.classList.add("printing");
+  setTimeout(() => window.print(), 150);
+}
+window.addEventListener("afterprint", () => document.body.classList.remove("printing"));
 
 function setupGate() {
   const gate = document.getElementById("adminGate");
