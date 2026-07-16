@@ -12,8 +12,8 @@ const CONFIG = {
   // Leave as "" until you have one and Buy buttons will explain how.
   paypalMeHandle: "mrpokecard",
 
-  // Where trade offers and questions get sent (a parent's email)
-  contactEmail: "parent@example.com",
+  // Where trade offers and questions get sent
+  contactEmail: "saxon@mrpokecards.com",
 
   // Money symbol + code used for PayPal links
   currencySymbol: "$",
