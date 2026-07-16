@@ -65,6 +65,7 @@ export default async (req) => {
 
     const session = await stripe.checkout.sessions.create({
       mode: "payment",
+      payment_method_types: ["card"],
       line_items,
       shipping_address_collection: { allowed_countries: SHIP_COUNTRIES },
       phone_number_collection: { enabled: true },
