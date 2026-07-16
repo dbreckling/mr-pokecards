@@ -206,7 +206,8 @@ async function refreshPrices(card) {
   }
 }
 
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", async function () {
+  await bootstrapCards();
   const id = getParam("id");
   const card = id ? getCard(id) : null;
   const crumb = document.getElementById("crumb");

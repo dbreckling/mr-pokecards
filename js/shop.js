@@ -49,7 +49,8 @@ function render() {
     : '<div class="empty">No cards match. Try a different filter or search.</div>';
 }
 
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", async function () {
+  await bootstrapCards();
   // Title reflects any active price bucket / filter
   const title = document.getElementById("shopTitle");
   const sub = document.getElementById("shopSub");

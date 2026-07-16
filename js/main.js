@@ -20,7 +20,8 @@ function heroFanHtml(cards) {
   }).join("") + '</div>';
 }
 
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", async function () {
+  await bootstrapCards();
   const cards = loadCards().filter(isPublicCard);
   const forSale = cards.filter(c => c.status === "sale");
 

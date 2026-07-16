@@ -2,6 +2,50 @@
 //  Shared UI: header, card tiles, helpers. Loaded on every page.
 // ============================================================
 
+// ---------- Shared database API (Netlify function) ----------
+const CARDS_API = "/api/cards";
+
+async function apiGetCards(key) {
+  try {
+    const headers = key ? { "x-admin-key": key } : {};
+    const r = await fetch(CARDS_API, { cache: "no-store", headers });
+    if (!r.ok) return null;
+    const d = await r.json();
+    return Array.isArray(d) ? d : null;
+  } catch (e) { return null; }
+}
+
+async function apiSaveCards(cards, key) {
+  try {
+    const r = await fetch(CARDS_API, {
+      method: "POST",
+      headers: { "content-type": "application/json", "x-admin-key": key || "" },
+      body: JSON.stringify({ cards })
+    });
+    return r.ok;
+  } catch (e) { return false; }
+}
+
+// true = valid, false = wrong password, null = API unreachable (e.g. local dev)
+async function apiVerifyKey(key) {
+  try {
+    const r = await fetch(CARDS_API, {
+      method: "POST",
+      headers: { "content-type": "application/json", "x-admin-key": key || "" },
+      body: JSON.stringify({ verify: true })
+    });
+    if (r.ok) return true;
+    if (r.status === 401) return false;
+    return null;
+  } catch (e) { return null; }
+}
+
+// Load the shared inventory into window.MRPC_CARDS before rendering the storefront.
+async function bootstrapCards() {
+  const cards = await apiGetCards();
+  if (Array.isArray(cards) && cards.length) window.MRPC_CARDS = cards;
+}
+
 function escapeHtml(s) {
   return String(s == null ? "" : s)
     .replace(/&/g, "&amp;").replace(/</g, "&lt;")

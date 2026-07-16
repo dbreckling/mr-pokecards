@@ -235,6 +235,7 @@ function saveForm() {
   resetForm();
   renderList();
   flash("Saved! " + name + " is on your site.");
+  syncUp(true);
 }
 
 function editCard(id) {
@@ -271,7 +272,7 @@ function editCard(id) {
 function removeCard(id) {
   const card = getCard(id);
   if (!card) return;
-  if (confirm('Remove "' + card.name + '"?')) { deleteCard(id); renderList(); }
+  if (confirm('Remove "' + card.name + '"?')) { deleteCard(id); renderList(); syncUp(true); }
 }
 
 let adminFilter = "all";
@@ -339,22 +340,50 @@ function importCards(file) {
       replaceAllCards(cards);
       renderList();
       flash("Restored " + cards.length + " cards from backup.");
+      syncUp(true);
     } catch (err) { alert("That file didn't look like a card backup."); }
   };
   reader.readAsText(file);
 }
 
+function adminKey() { return sessionStorage.getItem("mrpc.key") || ""; }
+
 function setupGate() {
   const gate = el("adminGate");
-  function unlock() { gate.style.display = "none"; sessionStorage.setItem("mrpc.admin", "ok"); }
-  if (sessionStorage.getItem("mrpc.admin") === "ok") { gate.style.display = "none"; }
+  function unlock(key) {
+    gate.style.display = "none";
+    sessionStorage.setItem("mrpc.admin", "ok");
+    if (key) sessionStorage.setItem("mrpc.key", key);
+    syncDown();
+  }
+  if (sessionStorage.getItem("mrpc.admin") === "ok") { gate.style.display = "none"; syncDown(); }
   else { gate.style.display = "flex"; setTimeout(() => el("gatePw").focus(), 50); }
-  function tryPw() {
-    if (el("gatePw").value === CONFIG.adminPassword) { unlock(); }
+
+  async function tryPw() {
+    const pw = el("gatePw").value;
+    el("gateErr").textContent = "Checking…";
+    const res = await apiVerifyKey(pw);
+    if (res === true) { unlock(pw); }
+    else if (res === null && pw === CONFIG.adminPassword) { unlock(pw); } // API unreachable (local dev)
     else { el("gateErr").textContent = "Wrong password. Try again."; el("gatePw").value = ""; el("gatePw").focus(); }
   }
   el("gateBtn").addEventListener("click", tryPw);
   el("gatePw").addEventListener("keydown", e => { if (e.key === "Enter") tryPw(); });
+}
+
+// Pull the latest shared inventory into this device (only overwrites if the DB has cards).
+async function syncDown() {
+  const db = await apiGetCards(adminKey());
+  if (Array.isArray(db) && db.length) { replaceAllCards(db); renderList(); }
+}
+
+// Push this device's cards to the shared DB so all devices + customers see them.
+async function syncUp(silent) {
+  const key = adminKey();
+  if (!key) { if (!silent) flash("Log in with the password to sync."); return false; }
+  const ok = await apiSaveCards(loadCards(), key);
+  if (!silent) flash(ok ? "Synced! All devices are up to date." : "Could not sync (check connection/password).");
+  return ok;
 }
 
 document.addEventListener("DOMContentLoaded", function () {
@@ -376,7 +405,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   el("saveBtn").addEventListener("click", saveForm);
   el("cancelEdit").addEventListener("click", resetForm);
-  el("publishBtn").addEventListener("click", publishCards);
+  el("publishBtn").addEventListener("click", () => syncUp(false));
   el("exportBtn").addEventListener("click", exportCards);
   el("importInput").addEventListener("change", e => importCards(e.target.files[0]));
 

@@ -61,4 +61,7 @@ function render() {
 function chg(id, qty) { setCartQty(id, qty); render(); }
 function rm(id) { removeFromCart(id); render(); }
 
-document.addEventListener("DOMContentLoaded", render);
+document.addEventListener("DOMContentLoaded", async function () {
+  await bootstrapCards();
+  render();
+});

@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Card Manager — Mr. PokeCards</title>
-  <link rel="stylesheet" href="css/styles.css?v=22">
+  <link rel="stylesheet" href="css/styles.css?v=23">
 </head>
 <body>
   <div id="adminGate" class="admin-gate">
@@ -167,13 +167,13 @@
       <div class="row-between">
         <h2 style="margin:0">My cards</h2>
         <div style="display:flex;gap:8px;flex-wrap:wrap">
-          <button id="publishBtn" class="btn btn-gold btn-sm">Publish to website</button>
+          <button id="publishBtn" class="btn btn-gold btn-sm">&#8635; Sync now</button>
           <button id="exportBtn" class="btn btn-white btn-sm">Save backup</button>
           <button class="btn btn-white btn-sm" onclick="document.getElementById('importInput').click()">Restore backup</button>
           <input id="importInput" type="file" accept="application/json" style="display:none">
         </div>
       </div>
-      <p class="note"><b>Publish to website</b> downloads a <code>cards.js</code> file. Send it to a grown-up to put on the site, then everyone sees your cards (Bulk/Personal cards stay private). <b>Save backup</b> keeps a private copy of everything.</p>
+      <p class="note">Your changes save to the website automatically and show on every device. <b>Sync now</b> force-pushes if needed. Bulk/Personal cards stay private. <b>Save backup</b> keeps a file copy.</p>
       <div class="admin-filters" id="adminFilters">
         <button class="afilter active" data-f="all">All</button>
         <button class="afilter" data-f="sale">Selling</button>
@@ -186,9 +186,9 @@
   </div>
 
   <script src="cards.js"></script>
-  <script src="js/config.js?v=22"></script>
-  <script src="js/store.js?v=22"></script>
-  <script src="js/ui.js?v=22"></script>
-  <script src="js/admin.js?v=22"></script>
+  <script src="js/config.js?v=23"></script>
+  <script src="js/store.js?v=23"></script>
+  <script src="js/ui.js?v=23"></script>
+  <script src="js/admin.js?v=23"></script>
 </body>
 </html>

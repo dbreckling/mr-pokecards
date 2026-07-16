@@ -1,4 +1,8 @@
-# Mr. PokeCards — static site, no build step. All files live at the repo root.
+# Mr. PokeCards — static site + a serverless function for the shared card database.
 [build]
   publish = "."
   command = ""
+
+[functions]
+  directory = "netlify/functions"
+  node_bundler = "esbuild"
