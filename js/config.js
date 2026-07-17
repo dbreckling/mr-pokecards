@@ -25,7 +25,7 @@ const CONFIG = {
 
   // Google Analytics 4 Measurement ID (looks like "G-XXXXXXXXXX").
   // Leave "" and no analytics load. Set it to turn tracking on.
-  gaMeasurementId: "",
+  gaMeasurementId: "G-Q5TWSM5TNS",
 
   // Password for the card manager (/admin.html). Change this!
   // Note: this is a light gate for casual privacy, not bank-grade security.
