@@ -62,6 +62,82 @@ async function apiStripeVerify(sid) {
   } catch (e) { return null; }
 }
 
+// ---- Email capture + marketing popup ----
+async function apiSubscribe(email, source, name) {
+  try {
+    const r = await fetch("/api/subscribe", {
+      method: "POST", headers: { "content-type": "application/json" },
+      body: JSON.stringify({ email, source: source || "form", name: name || "" })
+    });
+    return await r.json().catch(() => null);
+  } catch (e) { return null; }
+}
+async function apiGetMarketing() {
+  try {
+    const r = await fetch("/api/marketing", { cache: "no-store" });
+    if (!r.ok) return null;
+    return await r.json();
+  } catch (e) { return null; }
+}
+async function apiSaveMarketing(marketing, key) {
+  try {
+    const r = await fetch("/api/marketing", {
+      method: "POST", headers: { "content-type": "application/json", "x-admin-key": key || "" },
+      body: JSON.stringify({ marketing })
+    });
+    return await r.json().catch(() => null);
+  } catch (e) { return null; }
+}
+async function apiGetEmails(key) {
+  try {
+    const r = await fetch("/api/emails", { cache: "no-store", headers: { "x-admin-key": key || "" } });
+    if (!r.ok) return null;
+    return await r.json();
+  } catch (e) { return null; }
+}
+
+// ---- Shared admin chrome (submenu + password gate) ----
+function adminKey() { return sessionStorage.getItem("mrpc.key") || ""; }
+function adminNav(active) {
+  const tabs = [
+    ["cards", "admin.html", "🔍 Card Lookup"],
+    ["orders", "orders.html", "📦 Orders"],
+    ["emails", "emails.html", "✉️ Emails"],
+    ["marketing", "marketing.html", "📣 Marketing"],
+  ];
+  return '<nav class="admin-nav">' + tabs.map(t =>
+    '<a href="' + t[1] + '" class="admin-tab' + (t[0] === active ? " active" : "") + '">' + t[2] + '</a>'
+  ).join("") + '</nav>';
+}
+function renderAdminNav(active) {
+  const el = document.getElementById("adminNav");
+  if (el) el.innerHTML = adminNav(active);
+}
+// Password gate for admin pages. Calls onReady() once unlocked.
+function setupAdminGate(onReady) {
+  const gate = document.getElementById("adminGate");
+  function unlock(key) {
+    gate.style.display = "none";
+    sessionStorage.setItem("mrpc.admin", "ok");
+    if (key) sessionStorage.setItem("mrpc.key", key);
+    onReady();
+  }
+  if (sessionStorage.getItem("mrpc.admin") === "ok") { gate.style.display = "none"; onReady(); }
+  else { gate.style.display = "flex"; }
+  async function tryPw() {
+    const pw = document.getElementById("gatePw").value;
+    document.getElementById("gateErr").textContent = "Checking…";
+    const res = await apiVerifyKey(pw);
+    if (res === true) unlock(pw);
+    else if (res === null && pw === CONFIG.adminPassword) unlock(pw);
+    else { document.getElementById("gateErr").textContent = "Wrong password."; document.getElementById("gatePw").value = ""; }
+  }
+  const btn = document.getElementById("gateBtn");
+  if (btn) btn.addEventListener("click", tryPw);
+  const inp = document.getElementById("gatePw");
+  if (inp) inp.addEventListener("keydown", e => { if (e.key === "Enter") tryPw(); });
+}
+
 // Pull every order's real status (paid / refunded) straight from Stripe.
 async function apiSyncOrders(key) {
   try {

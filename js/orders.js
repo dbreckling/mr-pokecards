@@ -162,4 +162,4 @@ function setupGate() {
   document.getElementById("gatePw").addEventListener("keydown", e => { if (e.key === "Enter") tryPw(); });
 }
 
-document.addEventListener("DOMContentLoaded", setupGate);
+document.addEventListener("DOMContentLoaded", () => { renderAdminNav("orders"); setupGate(); });

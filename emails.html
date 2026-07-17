@@ -3,14 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Orders — Mr. PokeCards</title>
+  <title>Emails — Mr. PokeCards</title>
   <link rel="stylesheet" href="css/styles.css?v=33">
 </head>
 <body>
   <div id="adminGate" class="admin-gate">
     <div class="gate-box">
       <div class="gate-title">MR <span>PokeCards</span></div>
-      <div class="gate-sub">Orders &middot; private</div>
+      <div class="gate-sub">Emails &middot; private</div>
       <input id="gatePw" type="password" placeholder="Password" autocomplete="current-password">
       <button id="gateBtn" class="btn btn-gold btn-block">Enter</button>
       <div id="gateErr" class="gate-err"></div>
@@ -21,20 +21,23 @@
 
   <div class="wrap" style="max-width:900px">
     <div id="adminNav"></div>
-    <div class="row-between" style="margin-bottom:8px">
-      <h1 style="color:#fff;margin:0">Orders</h1>
+    <div class="panel">
+      <div class="row-between" style="margin-bottom:6px">
+        <h2 style="margin:0">Emails <span id="emailCount" style="color:var(--muted);font-weight:400;font-size:16px"></span></h2>
+        <div class="email-tools">
+          <button id="copyBtn" class="btn btn-white btn-sm">Copy all emails</button>
+          <button id="csvBtn" class="btn btn-white btn-sm">Download CSV</button>
+        </div>
+      </div>
+      <p class="note">Everyone who signed up through the site popup/newsletter, plus everyone who has bought a card. Use <b>Copy all emails</b> to paste into Mailchimp, Gmail, or any email tool.</p>
+      <div id="emailList"></div>
     </div>
-    <p class="note">Paid status comes straight from <b>Stripe</b> every time you open this page. Once an order shows <b>Paid</b>, mark it <b>Shipped</b> when it's in the mail. Refunds are done in Stripe, then reload here.</p>
-    <div id="ordersList"></div>
   </div>
-
-  <div id="printArea" class="print-area"></div>
 
   <script src="cards.js"></script>
   <script src="js/config.js?v=33"></script>
   <script src="js/store.js?v=33"></script>
   <script src="js/ui.js?v=33"></script>
-  <script src="js/qrcode.min.js?v=33"></script>
-  <script src="js/orders.js?v=33"></script>
+  <script src="js/emails.js?v=33"></script>
 </body>
 </html>

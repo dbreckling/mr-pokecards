@@ -692,6 +692,53 @@ img { max-width: 100%; }
   .hero-card { width: 116px; margin: 0 -32px; }
 }
 
+/* ===== Admin submenu ===== */
+.admin-nav {
+  display: flex; gap: 6px; flex-wrap: wrap;
+  background: var(--panel, #121829); border: 1px solid rgba(255,255,255,.08);
+  padding: 6px; border-radius: 12px; margin-bottom: 18px;
+}
+.admin-tab {
+  flex: 1; min-width: 120px; text-align: center; text-decoration: none;
+  color: var(--muted); font-weight: 700; font-size: 14px;
+  padding: 10px 12px; border-radius: 8px; white-space: nowrap;
+}
+.admin-tab:hover { color: #fff; background: rgba(255,255,255,.05); }
+.admin-tab.active { color: #0a0e1a; background: var(--gold); }
+@media print { .admin-nav { display: none !important; } }
+
+/* ===== Email list ===== */
+.email-tools { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 14px; }
+.email-table { width: 100%; border-collapse: collapse; }
+.email-table th, .email-table td { text-align: left; padding: 10px 8px; border-bottom: 1px solid rgba(255,255,255,.07); font-size: 14px; }
+.email-table th { color: var(--muted); font-size: 12px; text-transform: uppercase; letter-spacing: .05em; }
+.email-table td a { color: var(--gold); }
+.src-tag { font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 20px; background: rgba(255,255,255,.08); color: #fff; }
+.src-tag.customer { background: rgba(46,160,67,.2); color: #7ee2a0; }
+.src-tag.popup { background: rgba(245,189,31,.2); color: var(--gold); }
+
+/* ===== Marketing popup (storefront) ===== */
+.mkt-pop-overlay {
+  position: fixed; inset: 0; background: rgba(4,7,15,.78);
+  display: flex; align-items: center; justify-content: center; z-index: 9999; padding: 20px;
+  animation: mktFade .2s ease;
+}
+@keyframes mktFade { from { opacity: 0; } to { opacity: 1; } }
+.mkt-pop {
+  background: linear-gradient(180deg, #141b2e, #0d1322);
+  border: 1px solid rgba(245,189,31,.35); border-radius: 18px;
+  max-width: 420px; width: 100%; padding: 30px 26px; text-align: center; position: relative;
+  box-shadow: 0 24px 60px rgba(0,0,0,.5);
+}
+.mkt-pop-x { position: absolute; top: 10px; right: 14px; background: none; border: none; color: var(--muted); font-size: 26px; cursor: pointer; line-height: 1; }
+.mkt-pop-x:hover { color: #fff; }
+.mkt-pop-offer { display: inline-block; background: var(--gold); color: #0a0e1a; font-weight: 800; font-size: 13px; letter-spacing: .04em; padding: 5px 14px; border-radius: 20px; margin-bottom: 12px; }
+.mkt-pop h3 { color: #fff; font-size: 24px; margin: 0 0 8px; }
+.mkt-pop p { color: var(--muted); line-height: 1.5; margin: 0 0 18px; }
+.mkt-pop-form input { width: 100%; padding: 13px 14px; border-radius: 10px; border: 1px solid rgba(255,255,255,.15); background: #0a0e1a; color: #fff; margin-bottom: 10px; font-size: 15px; }
+.mkt-pop-msg { margin-top: 10px; color: var(--muted); font-size: 14px; }
+.mkt-pop-msg.ok { color: #7ee2a0; font-weight: 700; }
+
 /* ===== Packing slip (print) ===== */
 .print-area { display: none; }
 @media print {

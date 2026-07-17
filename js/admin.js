@@ -387,6 +387,7 @@ async function syncUp(silent) {
 }
 
 document.addEventListener("DOMContentLoaded", function () {
+  renderAdminNav("cards");
   setupGate();
   document.querySelectorAll(".afilter").forEach(b => b.addEventListener("click", () => { adminFilter = b.dataset.f; renderList(); }));
   document.querySelectorAll(".status-opt").forEach(o => o.addEventListener("click", () => pickStatus(o.dataset.status)));

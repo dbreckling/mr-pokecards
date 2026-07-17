@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Marketing — Mr. PokeCards</title>
+  <link rel="stylesheet" href="css/styles.css?v=33">
+</head>
+<body>
+  <div id="adminGate" class="admin-gate">
+    <div class="gate-box">
+      <div class="gate-title">MR <span>PokeCards</span></div>
+      <div class="gate-sub">Marketing &middot; private</div>
+      <input id="gatePw" type="password" placeholder="Password" autocomplete="current-password">
+      <button id="gateBtn" class="btn btn-gold btn-block">Enter</button>
+      <div id="gateErr" class="gate-err"></div>
+    </div>
+  </div>
+
+  <header class="site-header"></header>
+
+  <div class="wrap" style="max-width:900px">
+    <div id="adminNav"></div>
+
+    <div class="panel">
+      <div class="row-between" style="margin-bottom:6px">
+        <h2 style="margin:0">Popup offer</h2>
+        <label style="display:flex;align-items:center;gap:10px;cursor:pointer;font-weight:700;color:#fff">
+          <input id="enabled" type="checkbox" style="width:20px;height:20px;accent-color:var(--gold)">
+          Show popup on the site
+        </label>
+      </div>
+      <p class="note">When this is on, a popup appears for visitors (once per visit) to capture their email, just like the Klaviyo offers you see on other stores. Great for a "10% off your first card" welcome offer.</p>
+
+      <div class="field">
+        <label>Offer badge <span style="color:var(--muted);font-weight:400">(small tag at top, optional)</span></label>
+        <input id="offer" type="text" placeholder="10% OFF YOUR FIRST CARD" maxlength="120">
+      </div>
+      <div class="field">
+        <label>Headline</label>
+        <input id="headline" type="text" placeholder="Join the PokeCards Club!" maxlength="120">
+      </div>
+      <div class="field">
+        <label>Message</label>
+        <textarea id="message" placeholder="Sign up and I'll email you a code for 10% off, plus first look at new cards." maxlength="400"></textarea>
+      </div>
+      <div class="row-between">
+        <div class="field" style="flex:1;min-width:160px">
+          <label>Button text</label>
+          <input id="button" type="text" placeholder="Get my code" maxlength="40">
+        </div>
+        <div class="field" style="flex:1;min-width:160px">
+          <label style="display:flex;align-items:center;gap:10px;cursor:pointer;font-weight:700;margin-top:26px">
+            <input id="collectEmail" type="checkbox" checked style="width:18px;height:18px;accent-color:var(--gold)">
+            Ask for their email
+          </label>
+        </div>
+      </div>
+      <div class="field">
+        <label>Thank-you message <span style="color:var(--muted);font-weight:400">(shown after they sign up)</span></label>
+        <textarea id="success" placeholder="You're in! Use code SAXON10 for 10% off. Check your email too." maxlength="300"></textarea>
+      </div>
+
+      <div class="row-between">
+        <button id="saveBtn" class="btn btn-gold">Save popup</button>
+        <button id="previewBtn" class="btn btn-outline">Preview</button>
+      </div>
+      <div id="saveMsg" class="note" style="display:none;margin-top:12px"></div>
+    </div>
+  </div>
+
+  <div id="previewMount"></div>
+
+  <script src="cards.js"></script>
+  <script src="js/config.js?v=33"></script>
+  <script src="js/store.js?v=33"></script>
+  <script src="js/ui.js?v=33"></script>
+  <script src="js/marketing.js?v=33"></script>
+</body>
+</html>
