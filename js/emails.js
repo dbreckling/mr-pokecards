@@ -5,7 +5,7 @@
 let CONTACTS = [];   // merged, deduped { email, name, source, date }
 
 function srcTag(source) {
-  const label = source === "customer" ? "Customer" : source === "popup" ? "Popup" : "Signup";
+  const label = source === "customer" ? "Customer" : source === "popup" ? "Popup" : source === "contact" ? "Contact" : "Signup";
   const cls = source === "customer" ? "customer" : source === "popup" ? "popup" : "";
   return '<span class="src-tag ' + cls + '">' + label + '</span>';
 }

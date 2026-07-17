@@ -339,7 +339,7 @@ function renderHeader(active) {
       '<a href="shop.html?filter=collection" class="' + (active === "collection" ? "active" : "") + '">My Collection</a>' +
       '<a href="shop.html?filter=trade">For Trade</a>' +
       '<a href="index.html#about">About Saxon</a>' +
-      '<a href="mailto:' + CONFIG.contactEmail + '">Contact</a>' +
+      '<a href="contact.html">Contact</a>' +
     '</nav>' +
     '<div class="kid-badge"><span class="dot"></span> Support a Young Collector</div>' +
     '<div class="header-icons">' +
@@ -350,7 +350,6 @@ function renderHeader(active) {
 }
 
 function renderFooter() {
-  const email = CONFIG.contactEmail;
   const ig = CONFIG.instagramUrl
     ? '<a href="' + CONFIG.instagramUrl + '">Instagram</a>'
     : '<span class="soon">Instagram (coming soon)</span>';
@@ -366,7 +365,7 @@ function renderFooter() {
         '<p>Some cards stay in my collection forever.<br>' +
         'Some cards help me buy my next booster pack.<br>' +
         'Thanks for helping me continue my collecting journey.</p>' +
-        '<div class="footer-sign">&mdash; Saxon</div>' +
+        '<div class="footer-sign">Saxon</div>' +
         '<div class="footer-stamp">Kid Owned &middot; Kid Collected &middot; Collector Approved</div>' +
       '</div>' +
     '</div>' +
@@ -381,11 +380,11 @@ function renderFooter() {
         '<a href="info.html#care">Card Care</a>' +
         '<a href="info.html#shipping">Shipping</a>' +
         '<a href="info.html#faq">FAQ</a>' +
-        '<a href="mailto:' + email + '">Contact</a>' +
+        '<a href="contact.html">Contact</a>' +
       '</div>' +
       '<div class="footer-col"><h4>Follow My Journey</h4>' +
         ig + yt +
-        '<a href="mailto:' + email + '?subject=' + encodeURIComponent("Newsletter signup") + '">Email Newsletter</a>' +
+        '<a href="contact.html?topic=Newsletter">Email Newsletter</a>' +
       '</div>' +
     '</div>' +
   '</div>' +
