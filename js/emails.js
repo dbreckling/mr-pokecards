@@ -18,16 +18,25 @@ function render() {
     return;
   }
   el.innerHTML = '<table class="email-table"><thead><tr>' +
-    '<th>Email</th><th>Name</th><th>Source</th><th>Date</th></tr></thead><tbody>' +
+    '<th>Email</th><th>Name</th><th>Source</th><th>Date</th><th></th></tr></thead><tbody>' +
     CONTACTS.map(c =>
       '<tr>' +
         '<td><a href="mailto:' + escapeHtml(c.email) + '">' + escapeHtml(c.email) + '</a></td>' +
         '<td>' + escapeHtml(c.name || "") + '</td>' +
         '<td>' + srcTag(c.source) + '</td>' +
         '<td>' + escapeHtml((c.date || "").slice(0, 10)) + '</td>' +
+        '<td>' + (c.source === "customer" ? "" :
+          '<button class="btn btn-sm" style="background:none;color:var(--muted);padding:2px 6px" onclick="removeContact(\'' + escapeHtml(c.email) + '\')">Remove</button>') + '</td>' +
       '</tr>'
     ).join("") +
     '</tbody></table>';
+}
+
+async function removeContact(email) {
+  if (!confirm("Remove " + email + " from your email list?")) return;
+  const ok = await apiRemoveEmail(email, adminKey());
+  if (ok) { CONTACTS = CONTACTS.filter(c => c.email !== email); render(); }
+  else alert("Could not remove. Try again.");
 }
 
 async function load() {

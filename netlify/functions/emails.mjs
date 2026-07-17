@@ -86,5 +86,20 @@ export default async (req) => {
     return json({ subscribers, marketing });
   }
 
+  // ---- Admin: remove a subscriber by email ----
+  if (path.endsWith("/emails") && req.method === "POST") {
+    if (!isAdmin) return json({ error: "unauthorized" }, 401);
+    let body = {};
+    try { body = await req.json(); } catch (e) { /* ignore */ }
+    if (body.action === "remove" && body.email) {
+      const target = normEmail(body.email);
+      const subs = (await store.get("subscribers", { type: "json" })) || [];
+      const next = subs.filter(s => s.email !== target);
+      await store.setJSON("subscribers", next);
+      return json({ ok: true, subscribers: next });
+    }
+    return json({ error: "bad action" }, 400);
+  }
+
   return json({ error: "not found" }, 404);
 };

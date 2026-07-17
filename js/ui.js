@@ -95,6 +95,15 @@ async function apiGetEmails(key) {
     return await r.json();
   } catch (e) { return null; }
 }
+async function apiRemoveEmail(email, key) {
+  try {
+    const r = await fetch("/api/emails", {
+      method: "POST", headers: { "content-type": "application/json", "x-admin-key": key || "" },
+      body: JSON.stringify({ action: "remove", email })
+    });
+    return r.ok;
+  } catch (e) { return false; }
+}
 
 // ---- Shared admin chrome (submenu + password gate) ----
 function adminKey() { return sessionStorage.getItem("mrpc.key") || ""; }
