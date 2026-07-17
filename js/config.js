@@ -23,6 +23,10 @@ const CONFIG = {
   instagramUrl: "",   // e.g. "https://instagram.com/mrpokecards"
   youtubeUrl: "",     // e.g. "https://youtube.com/@mrpokecards"
 
+  // Google Analytics 4 Measurement ID (looks like "G-XXXXXXXXXX").
+  // Leave "" and no analytics load. Set it to turn tracking on.
+  gaMeasurementId: "",
+
   // Password for the card manager (/admin.html). Change this!
   // Note: this is a light gate for casual privacy, not bank-grade security.
   adminPassword: "pokecards"
