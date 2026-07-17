@@ -12,7 +12,9 @@
 
   if (choice === "accepted") { loadGA(); return; }
   if (choice === "declined") { return; }
-  document.addEventListener("DOMContentLoaded", showBanner);
+  // Show the banner whether or not DOMContentLoaded has already fired.
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", showBanner);
+  else showBanner();
 
   function loadGA() {
     var s = document.createElement("script");
