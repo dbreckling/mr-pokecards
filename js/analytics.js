@@ -4,7 +4,7 @@
 //  Set CONFIG.gaMeasurementId to turn it on.
 // ============================================================
 (function () {
-  var GA_ID = (window.CONFIG && CONFIG.gaMeasurementId) || "";
+  var GA_ID = (typeof CONFIG !== "undefined" && CONFIG.gaMeasurementId) || "";
   if (!GA_ID) return;   // analytics off until an ID is set
 
   var CONSENT_KEY = "mrpc.cookieConsent";
